@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "NovaRes",
-  description: "World's Leading Retreat and Workshop Management and Discovery Platform!",
+  description: "World's Leading Retreat and Workshop Management Platform!",
 };
 
 export default function RootLayout({
