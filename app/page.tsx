@@ -1,20 +1,17 @@
-import prisma from '@/app/lib/db'
+import prisma from '@/app/lib/db';
+import EventsTable from './EventsTable';
+import Header from './Header';
 
 export default async function Home() {
   const events = await prisma.event.findMany();
 
   return (
-    <main className='min-h-screen p-24'>
-      <h1 className='text-2xl'>Welcome to NovaRes!</h1>
-      <h2 className='text-xl'>Your current retreats: </h2>
-      <ol>
-        {events.map((event) => (
-          <li key={event.id}>
-            <h3 className='text-lg'>{event.name}</h3>
-            <p className='text-md'>{event.description}</p>
-          </li>
-        ))}
-      </ol>
+    <main className='min-h-screen'>
+      <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+        <h1 className='text-2xl mb-5'>Welcome to NovaRes!</h1>
+
+        <EventsTable events={events} />
+      </div>
     </main>
   );
 }
