@@ -1,6 +1,34 @@
+'use client';
+import { createEventAction } from '../actions/actions';
+import React from 'react';
+import { DatePicker } from './DatePicker';
+
+const eventStatus = [
+  { id: 'open', title: 'Open' },
+  { id: 'closed', title: 'Closed' },
+  { id: 'waitlist', title: 'Waitlist' },
+];
+
 export default function CreateEvent() {
+  const [startDate, setStartDate] = React.useState<Date>();
+  const [endDate, setEndDate] = React.useState<Date>();
+
+  function handleSubmit(formData: FormData) {
+    const parsedFormData = {
+      eventName: formData.get('eventname') as string,
+      startDate: startDate?.toISOString(),
+      endDate: endDate?.toISOString(),
+      location: formData.get('location') as string,
+      price: formData.get('price') as string,
+      status: formData.get('event-status') as string,
+    }
+
+    createEventAction(parsedFormData);
+
+  }
+
   return (
-    <form>
+    <form action={handleSubmit}>
       <div className='space-y-12'>
         <div className='border-b border-gray-900/10 pb-12'>
           <h2 className='text-base font-semibold leading-7 text-gray-900'>
@@ -96,7 +124,45 @@ export default function CreateEvent() {
               </div>
             </div>
 
+            <div className='row-start-5'>
+              <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
+                Start Date
+              </label>
+              <DatePicker date={startDate} setDate={setStartDate} />
+            </div>
 
+            <div className='row-start-6'>
+              <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
+                End Date (optional)
+              </label>
+              <DatePicker date={endDate} setDate={setEndDate} />
+            </div>
+
+            <fieldset className='row-start-7'>
+              <legend className='text-sm font-semibold leading-6 text-gray-900'>
+                Event Status
+              </legend>
+              <div className='mt-6 space-y-6 sm:flex sm:items-center sm:space-x-10 sm:space-y-0'>
+                {eventStatus.map((eventStatus) => (
+                  <div key={eventStatus.id} className='flex items-center'>
+                    <input
+                      id={eventStatus.id}
+                      name='event-status'
+                      type='radio'
+                      value={eventStatus.id}
+                      defaultChecked={eventStatus.id === 'open'}
+                      className='h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600'
+                    />
+                    <label
+                      htmlFor={eventStatus.id}
+                      className='ml-3 block text-sm font-medium leading-6 text-gray-900'
+                    >
+                      {eventStatus.title}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </fieldset>
           </div>
         </div>
       </div>
