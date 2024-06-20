@@ -15,7 +15,7 @@ model Event {
   name        String
   description String?
   startDate   DateTime
-  endDate     DateTime
+  endDate     DateTime?
   location    String?
   price       Int?
   createdAt   DateTime @default(now())
