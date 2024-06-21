@@ -1,6 +1,8 @@
-"use server";
+'use server';
 
-import prisma from "@/app/lib/db";
+import prisma from '@/app/lib/db';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 type ParsedFormData = {
   eventName: string;
@@ -12,7 +14,6 @@ type ParsedFormData = {
 };
 
 export async function createEventAction(formData: ParsedFormData) {
-
   await prisma.event.create({
     data: {
       name: formData.eventName,
@@ -20,6 +21,8 @@ export async function createEventAction(formData: ParsedFormData) {
       endDate: formData.endDate,
       location: formData.location,
       price: formData.price,
-    }
-  })
+    },
+  });
+
+  redirect("/");
 }
