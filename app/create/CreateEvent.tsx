@@ -2,6 +2,7 @@
 import { createEventAction } from '../actions/actions';
 import React from 'react';
 import { DatePicker } from './DatePicker';
+import ErrorToast from './ErrorToast';
 
 const eventStatus = [
   { id: 'open', title: 'Open' },
@@ -12,19 +13,24 @@ const eventStatus = [
 export default function CreateEvent() {
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
+  const [showError, setShowError] = React.useState(false);
 
   function handleSubmit(formData: FormData) {
-    const parsedFormData = {
-      eventName: formData.get('eventname') as string,
-      startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString(),
-      location: formData.get('location') as string,
-      price: formData.get('price') as string,
-      status: formData.get('event-status') as string,
+    if (!startDate) {
+      setShowError(true);
+      return;
     }
 
-    createEventAction(parsedFormData);
+    const parsedFormData = {
+      eventName: formData.get('eventname') as string,
+      startDate: startDate!.toISOString(),
+      endDate: endDate?.toISOString(),
+      location: formData.get('location') as string,
+      price: Number((formData.get('price') as string) || '0'),
+      status: formData.get('event-status') as string,
+    };
 
+    createEventAction(parsedFormData);
   }
 
   return (
@@ -40,7 +46,7 @@ export default function CreateEvent() {
                 htmlFor='eventname'
                 className='block text-sm font-medium leading-6 text-gray-900'
               >
-                Event Name
+                Event Name<span className='text-red-500'>*</span>
               </label>
               <div className='mt-2'>
                 <div className='flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md'>
@@ -48,6 +54,7 @@ export default function CreateEvent() {
                     type='text'
                     name='eventname'
                     id='eventname'
+                    required
                     autoComplete='eventname'
                     className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
                   />
@@ -126,14 +133,14 @@ export default function CreateEvent() {
 
             <div className='row-start-5'>
               <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
-                Start Date
+                Start Date<span className='text-red-500'>*</span>
               </label>
               <DatePicker date={startDate} setDate={setStartDate} />
             </div>
 
             <div className='row-start-6'>
               <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
-                End Date (optional)
+                End Date
               </label>
               <DatePicker date={endDate} setDate={setEndDate} />
             </div>
@@ -181,6 +188,7 @@ export default function CreateEvent() {
           Save
         </button>
       </div>
+      <ErrorToast show={showError} setShow={setShowError} />
     </form>
   );
 }
