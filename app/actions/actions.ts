@@ -1,10 +1,9 @@
 'use server';
 
 import prisma from '@/app/lib/db';
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-type ParsedFormData = {
+type RawFormData = {
   eventName: string;
   startDate: string;
   endDate: string | undefined;
@@ -13,16 +12,24 @@ type ParsedFormData = {
   status: string | null;
 };
 
-export async function createEventAction(formData: ParsedFormData) {
+export async function createEvent(formData: FormData) {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const rawFormData = {
+    eventName: formData.get('eventname') as string,
+    startDate: formData.get('startDate') as string,
+    endDate: formData.get('endDate') as string,
+    location: formData.get('location') as string,
+    price: Number((formData.get('price') as string) || '0'),
+    status: formData.get('event-status') as string,
+  };
+
   await prisma.event.create({
     data: {
-      name: formData.eventName,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      location: formData.location,
-      price: formData.price,
+      name: rawFormData.eventName,
+      startDate: rawFormData.startDate,
     },
   });
 
-  redirect("/");
+  redirect('/');
 }

@@ -1,5 +1,5 @@
 'use client';
-import { createEventAction } from '../actions/actions';
+import { createEvent } from '../actions/actions';
 import React from 'react';
 import { DatePicker } from './DatePicker';
 import ErrorToast from './ErrorToast';
@@ -15,26 +15,8 @@ export default function CreateEvent() {
   const [endDate, setEndDate] = React.useState<Date>();
   const [showError, setShowError] = React.useState(false);
 
-  function handleSubmit(formData: FormData) {
-    if (!startDate) {
-      setShowError(true);
-      return;
-    }
-
-    const parsedFormData = {
-      eventName: formData.get('eventname') as string,
-      startDate: startDate!.toISOString(),
-      endDate: endDate?.toISOString(),
-      location: formData.get('location') as string,
-      price: Number((formData.get('price') as string) || '0'),
-      status: formData.get('event-status') as string,
-    };
-
-    createEventAction(parsedFormData);
-  }
-
   return (
-    <form action={handleSubmit}>
+    <form action={createEvent}>
       <div className='space-y-12'>
         <div className='border-b border-gray-900/10 pb-12'>
           <h2 className='text-base font-semibold leading-7 text-gray-900'>
@@ -83,7 +65,7 @@ export default function CreateEvent() {
               </p>
             </div>
 
-            <div className='col-span-1 '>
+            <div className='col-span-1 row-start-3'>
               <label
                 htmlFor='price'
                 className='block text-sm font-medium leading-6 text-gray-900'
@@ -136,6 +118,11 @@ export default function CreateEvent() {
                 Start Date<span className='text-red-500'>*</span>
               </label>
               <DatePicker date={startDate} setDate={setStartDate} />
+              <input
+                type='hidden'
+                name='startDate'
+                value={startDate?.toISOString()}
+              />
             </div>
 
             <div className='row-start-6'>
@@ -143,6 +130,11 @@ export default function CreateEvent() {
                 End Date
               </label>
               <DatePicker date={endDate} setDate={setEndDate} />
+              <input
+                type='hidden'
+                name='endDate'
+                value={endDate?.toISOString()}
+              />
             </div>
 
             <fieldset className='row-start-7'>
