@@ -2,7 +2,8 @@
 import { createEvent } from '../actions/actions';
 import React from 'react';
 import { DatePicker } from './DatePicker';
-import ErrorToast from './ErrorToast';
+import { useFormState, useFormStatus } from 'react-dom';
+import toast from 'react-hot-toast';
 
 const eventStatus = [
   { id: 'open', title: 'Open' },
@@ -10,13 +11,30 @@ const eventStatus = [
   { id: 'waitlist', title: 'Waitlist' },
 ];
 
-export default function CreateEvent() {
-  const [startDate, setStartDate] = React.useState<Date>();
-  const [endDate, setEndDate] = React.useState<Date>();
-  const [showError, setShowError] = React.useState(false);
+export function SubmitButton() {
+  const { pending } = useFormStatus();
 
   return (
-    <form action={createEvent}>
+    <button
+      type='submit'
+      className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+    >
+      {pending ? 'Submitting...' : 'Submit'}
+    </button>
+  );
+}
+
+export default function CreateEventForm() {
+  const [startDate, setStartDate] = React.useState<Date>();
+  const [endDate, setEndDate] = React.useState<Date>();
+  const [state, action] = useFormState(createEvent, { errors: {} });
+
+  React.useEffect(() => {
+    console.log(state);
+  }, [state]);
+
+  return (
+    <form action={action}>
       <div className='space-y-12'>
         <div className='border-b border-gray-900/10 pb-12'>
           <h2 className='text-base font-semibold leading-7 text-gray-900'>
@@ -167,20 +185,17 @@ export default function CreateEvent() {
       </div>
 
       <div className='mt-6 flex items-center justify-end gap-x-6'>
+        {/* <p aria-live='polite' className='sr-only'>
+          {state?.message}
+        </p> */}
         <button
           type='button'
           className='text-sm font-semibold leading-6 text-gray-900'
         >
           Cancel
         </button>
-        <button
-          type='submit'
-          className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-        >
-          Save
-        </button>
+        <SubmitButton />
       </div>
-      <ErrorToast show={showError} setShow={setShowError} />
     </form>
   );
 }

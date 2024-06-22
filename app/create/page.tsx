@@ -1,4 +1,4 @@
-import CreateEvent from './CreateEvent';
+import CreateEvent from './CreateEventForm';
 
 
 export default function page() {
