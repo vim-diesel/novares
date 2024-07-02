@@ -3,8 +3,9 @@
 import prisma from '@/app/lib/db';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { actionClient } from '@/app/lib/safe-action';
 
-const FormDataSchema = z.object({
+const NewEventSchema = z.object({
   eventName: z.string(),
   startDate: z.string().datetime(),
   endDate: z.string().datetime().optional(),
@@ -13,22 +14,32 @@ const FormDataSchema = z.object({
   status: z.enum(['open', 'closed', 'waitlist']).optional(),
 });
 
-export async function createEvent(previousState: Object, formData: FormData) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+// export async function createEvent
 
-  const result = FormDataSchema.safeParse({
-    eventName: formData.get('eventname') as string,
-    startDate: formData.get('startDate') as string,
-    endDate: formData.get('endDate') as string,
-    location: formData.get('location'),
-    price: Number((formData.get('price') as string) || '0'),
-    status: formData.get('event-status') as string,
-  });
-  if (!result.success) {
-    
-    return result.error.issues;
+export const createEvent = actionClient
+  .schema(NewEventSchema)
+  .action(async ( { parsedInput: {eventName, startDate} }) => {
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+
+  if (eventName === "event1" && startDate) {
+    return {
+      success: "Event1 created"
+    }
   }
-  console.log(result);
+
+  return {
+    failure: "Coudn't create event"
+  }
+  // const result = NewEventSchema.safeParse({
+  //   eventName: formData.get('eventname'),
+  //   startDate: formData.get('startDate'),
+  //   endDate: formData.get('endDate'),
+  //   location: formData.get('location'),
+  //   price: formData.get('price'),
+  //   status: formData.get('event-status'),
+  // });
+  
 
   // const rawFormData = {};
 
@@ -40,5 +51,4 @@ export async function createEvent(previousState: Object, formData: FormData) {
   // });
 
   // redirect('/');
-  return { errors: {} };
-}
+})

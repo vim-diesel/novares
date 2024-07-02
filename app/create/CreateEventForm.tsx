@@ -1,6 +1,6 @@
 'use client';
 import { createEvent } from '../actions/actions';
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { DatePicker } from './DatePicker';
 import { useFormState, useFormStatus } from 'react-dom';
 import toast from 'react-hot-toast';
@@ -27,14 +27,27 @@ export function SubmitButton() {
 export default function CreateEventForm() {
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
-  const [state, action] = useFormState(createEvent, { errors: {} });
-
-  React.useEffect(() => {
-    console.log(state);
-  }, [state]);
+  // const [state, action] = useFormState(createEvent, { errors: {} });
+  // React.useEffect(() => {
+  //   console.log(state);
+  // }, [state]);
 
   return (
-    <form action={action}>
+    <form
+      onSubmit={async (e: FormEvent) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+
+        console.log('formData.eventName: ', formData.get('eventName'));
+
+        const res = await createEvent({
+          eventName: formData.get('eventName') as string,
+          startDate: startDate?.toISOString() as string,
+        });
+
+        console.log(res);
+      }}
+    >
       <div className='space-y-12'>
         <div className='border-b border-gray-900/10 pb-12'>
           <h2 className='text-base font-semibold leading-7 text-gray-900'>
@@ -52,8 +65,8 @@ export default function CreateEventForm() {
                 <div className='flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md'>
                   <input
                     type='text'
-                    name='eventname'
-                    id='eventname'
+                    name='eventName'
+                    id='eventName'
                     required
                     autoComplete='eventname'
                     className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
@@ -136,11 +149,11 @@ export default function CreateEventForm() {
                 Start Date<span className='text-red-500'>*</span>
               </label>
               <DatePicker date={startDate} setDate={setStartDate} />
-              <input
+              {/* <input
                 type='hidden'
                 name='startDate'
-                value={startDate?.toISOString()}
-              />
+                value={startDate ? startDate.toISOString() : ''}
+              /> */}
             </div>
 
             <div className='row-start-6'>
@@ -148,11 +161,11 @@ export default function CreateEventForm() {
                 End Date
               </label>
               <DatePicker date={endDate} setDate={setEndDate} />
-              <input
+              {/* <input
                 type='hidden'
                 name='endDate'
                 value={endDate?.toISOString()}
-              />
+              /> */}
             </div>
 
             <fieldset className='row-start-7'>
@@ -164,7 +177,7 @@ export default function CreateEventForm() {
                   <div key={eventStatus.id} className='flex items-center'>
                     <input
                       id={eventStatus.id}
-                      name='event-status'
+                      name='eventStatus'
                       type='radio'
                       value={eventStatus.id}
                       defaultChecked={eventStatus.id === 'open'}
