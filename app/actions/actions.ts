@@ -18,37 +18,30 @@ const NewEventSchema = z.object({
 
 export const createEvent = actionClient
   .schema(NewEventSchema)
-  .action(async ( { parsedInput: {eventName, startDate} }) => {
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  .action(async ({ parsedInput: { eventName, startDate } }) => {
+    // Just for testing the useFormStatus hooks or other state hooks
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-
-  if (eventName === "event1" && startDate) {
-    return {
-      success: "Event1 created"
+    if (eventName && startDate) {
+      try {
+        const event = await prisma.event.create({
+          data: {
+            name: eventName,
+            startDate: startDate,
+          },
+        });
+        return {
+          success: 'Event created',
+        };
+      } catch (e) {
+        return {
+          failue: 'Failed to create event',
+          error: e,
+        };
+      }
     }
-  }
 
-  return {
-    failure: "Coudn't create event"
-  }
-  // const result = NewEventSchema.safeParse({
-  //   eventName: formData.get('eventname'),
-  //   startDate: formData.get('startDate'),
-  //   endDate: formData.get('endDate'),
-  //   location: formData.get('location'),
-  //   price: formData.get('price'),
-  //   status: formData.get('event-status'),
-  // });
-  
-
-  // const rawFormData = {};
-
-  // await prisma.event.create({
-  //   data: {
-  //     name: rawFormData.eventName,
-  //     startDate: rawFormData.startDate,
-  //   },
-  // });
-
-  // redirect('/');
-})
+    return {
+      failure: "Coudn't create event",
+    };
+  });

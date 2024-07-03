@@ -11,9 +11,7 @@ const eventStatus = [
   { id: 'waitlist', title: 'Waitlist' },
 ];
 
-export function SubmitButton() {
-  const { pending } = useFormStatus();
-
+export function SubmitButton({ pending }: { pending: Boolean }) {
   return (
     <button
       type='submit'
@@ -31,21 +29,28 @@ export default function CreateEventForm() {
   // React.useEffect(() => {
   //   console.log(state);
   // }, [state]);
+  const [submitting, setSubmitting] = React.useState<Boolean>(false);
 
   return (
     <form
       onSubmit={async (e: FormEvent) => {
         e.preventDefault();
+        setSubmitting(true);
         const formData = new FormData(e.target as HTMLFormElement);
 
-        console.log('formData.eventName: ', formData.get('eventName'));
+        if (!startDate) {
+          alert('choose a start date');
+          setSubmitting(false);
+          return;
+        }
 
         const res = await createEvent({
           eventName: formData.get('eventName') as string,
-          startDate: startDate?.toISOString() as string,
+          startDate: startDate!.toISOString() as string,
         });
 
-        console.log(res);
+        console.log(res?.data);
+        setSubmitting(false);
       }}
     >
       <div className='space-y-12'>
@@ -207,7 +212,7 @@ export default function CreateEventForm() {
         >
           Cancel
         </button>
-        <SubmitButton />
+        <SubmitButton pending={submitting} />
       </div>
     </form>
   );

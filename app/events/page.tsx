@@ -1,14 +1,14 @@
 import prisma from '@/app/lib/db';
-import EventsTable from './EventsTable';
-import Header from './Header';
+import EventsTable from '@/app/EventsTable';
 
-export default async function Home() {
+
+export default async function Events() {
   const events = await prisma.event.findMany();
 
   return (
     <main className='min-h-screen'>
       <div className='mx-auto max-w-7xl mt-10 sm:px-6 lg:px-8'>
-        <h1 className='text-2xl text-center'>Welcome to NovaRes!</h1>
+        <EventsTable events={events} />
       </div>
     </main>
   );
