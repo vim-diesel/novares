@@ -45,3 +45,10 @@ export const createEvent = actionClient
       failure: "Coudn't create event",
     };
   });
+
+
+export async function getEventsCount() {
+  const count = await prisma.event.count()
+
+  return count;
+}
