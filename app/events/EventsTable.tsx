@@ -67,7 +67,7 @@ export default function EventsTable({ events }: { events: Event[] }) {
                 {events.map((event: Event) => (
                   <tr key={event.id}>
                     <td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0'>
-                      {event.name}
+                      {event.title}
                     </td>
                     <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
                       {event.startDate.toLocaleDateString()}
@@ -90,7 +90,7 @@ export default function EventsTable({ events }: { events: Event[] }) {
                         href={`/events/${event.id}`}
                         className='text-indigo-600 hover:text-indigo-900'
                       >
-                        Edit<span className='sr-only'>, {event.name}</span>
+                        Edit<span className='sr-only'>, {event.title}</span>
                       </Link>
                     </td>
                   </tr>

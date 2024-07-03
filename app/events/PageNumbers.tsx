@@ -1,8 +1,9 @@
-'use client';
+// 'use client';
 import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
 } from '@heroicons/react/20/solid';
+import range from '@/app/utils/range';
 
 export default function PageNumbers({
   currPage,
@@ -26,6 +27,39 @@ export default function PageNumbers({
         </a>
       </div>
       <div className='hidden md:-mt-px md:flex'>
+        {totalPages <= 7 ? (
+          range(1, totalPages + 1).map((i) => {
+            return (
+              <a
+                key={i}
+                className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${
+                  i === currPage
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                href={`/events?page=${i}`}
+              >
+                {i}
+              </a>
+            );
+          })
+        ) : (
+          range(1, 3).map((i) => {
+            return (
+              <a
+                key={i}
+                className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${
+                  i === currPage
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                href={`/events?page=${i}`}
+              >
+                {i}
+              </a>
+            );
+          })
+        )}
         <a
           href='#'
           className='inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700'
