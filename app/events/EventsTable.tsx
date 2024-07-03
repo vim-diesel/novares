@@ -76,8 +76,12 @@ export default function EventsTable({ events }: { events: Event[] }) {
                       {event.location}
                     </td>
                     <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
-                    
-                      <span className={'inline-block bg-green-200 px-2 py-1 rounded-full ' + (event.status ? statusColors[event.status] : '')}>
+                      <span
+                        className={
+                          'px-2 py-1 rounded-full ' +
+                          (event.status ? statusColors[event.status] : '')
+                        }
+                      >
                         {event.status}
                       </span>
                     </td>
