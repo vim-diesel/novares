@@ -1,6 +1,12 @@
 import type { Event } from '@prisma/client';
 import Link from 'next/link';
 
+const statusColors: { [key: string]: string } = {
+  open: 'bg-green-200',
+  closed: 'bg-neutral-200',
+  waitlist: 'bg-yellow-100',
+};
+
 export default function EventsTable({ events }: { events: Event[] }) {
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -18,7 +24,7 @@ export default function EventsTable({ events }: { events: Event[] }) {
             type='button'
             className='block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
           >
-            <Link href="/create">Add event</Link>
+            <Link href='/create'>Add event</Link>
           </button>
         </div>
       </div>
@@ -46,6 +52,12 @@ export default function EventsTable({ events }: { events: Event[] }) {
                   >
                     Location
                   </th>
+                  <th
+                    scope='col'
+                    className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+                  >
+                    Status
+                  </th>
                   <th scope='col' className='relative py-3.5 pl-3 pr-4 sm:pr-0'>
                     <span className='sr-only'>Edit</span>
                   </th>
@@ -62,6 +74,12 @@ export default function EventsTable({ events }: { events: Event[] }) {
                     </td>
                     <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
                       {event.location}
+                    </td>
+                    <td className='whitespace-nowrap px-3 py-4 text-sm text-gray-500'>
+                    
+                      <span className={'inline-block bg-green-200 px-2 py-1 rounded-full ' + (event.status ? statusColors[event.status] : '')}>
+                        {event.status}
+                      </span>
                     </td>
                     <td className='relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0'>
                       <Link
