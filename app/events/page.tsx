@@ -1,6 +1,5 @@
 import prisma from '@/app/lib/db';
-import EventsTable from '@/app/EventsTable';
-
+import EventsTable from '@/app/events/EventsTable';
 
 export default async function Events() {
   const events = await prisma.event.findMany();

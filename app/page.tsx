@@ -1,5 +1,5 @@
 import prisma from '@/app/lib/db';
-import EventsTable from './EventsTable';
+import EventsTable from './events/EventsTable';
 import Header from './Header';
 
 export default async function Home() {
