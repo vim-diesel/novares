@@ -42,3 +42,19 @@ export async function getEventsCount() {
 
   return count;
 }
+
+export async function getEventsMany(
+  column: string,
+  order: string,
+  page: number
+) {
+  const res = await prisma.event.findMany({
+    orderBy: {
+      [column]: order,
+    },
+    take: 10,
+    skip: (page - 1) * 10,
+  });
+
+  return res;
+}
