@@ -1,5 +1,5 @@
 'use client';
-import { createEvent } from '../actions/actions';
+import { createEvent } from '../../lib/actions/actions';
 import React, { FormEvent } from 'react';
 import { DatePicker } from './DatePicker';
 import { useAction } from 'next-safe-action/hooks';
@@ -22,7 +22,8 @@ export default function CreateEventForm() {
       if (error.validationErrors) {
         toast.error('Check all required fields there pardner 🤠');
       } else if (error.serverError) {
-        toast.error('Goose on the loose 🪿 Run. Hide. And try again later');
+        toast.error('Server on fire ⽕🔥 Please try again later');
+        console.log(error);
       }
     },
   });
@@ -64,8 +65,6 @@ export default function CreateEventForm() {
                     type='text'
                     name='title'
                     id='title'
-                    required
-                    autoComplete='title'
                     className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
                   />
                 </div>
