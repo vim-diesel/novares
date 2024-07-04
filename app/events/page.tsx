@@ -20,6 +20,10 @@ export default async function Page({
 
   const totalPages = Math.ceil(eventCount / 10);
 
+  if (page > totalPages) {
+    redirect(`/events?page=${totalPages}`);
+  }
+
   const events: Event[] | null = await prisma.event.findMany({
     orderBy: {
       startDate: 'desc',

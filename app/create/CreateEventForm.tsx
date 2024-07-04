@@ -2,7 +2,7 @@
 import { createEvent } from '../actions/actions';
 import React, { FormEvent } from 'react';
 import { DatePicker } from './DatePicker';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useAction } from 'next-safe-action/hooks';
 import toast from 'react-hot-toast';
 
 const eventStatus = [
@@ -11,46 +11,31 @@ const eventStatus = [
   { id: 'waitlist', title: 'Waitlist' },
 ];
 
-export function SubmitButton({ pending }: { pending: Boolean }) {
-  return (
-    <button
-      type='submit'
-      className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-    >
-      {pending ? 'Submitting...' : 'Submit'}
-    </button>
-  );
-}
-
 export default function CreateEventForm() {
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
-  // const [state, action] = useFormState(createEvent, { errors: {} });
-  // React.useEffect(() => {
-  //   console.log(state);
-  // }, [state]);
-  const [submitting, setSubmitting] = React.useState<Boolean>(false);
+  const { executeAsync, result, status } = useAction(createEvent, {
+    onSuccess() {
+      toast.success('Event created!');
+    },
+  });
 
   return (
     <form
       onSubmit={async (e: FormEvent) => {
         e.preventDefault();
-        setSubmitting(true);
         const formData = new FormData(e.target as HTMLFormElement);
 
-        if (!startDate) {
-          alert('choose a start date');
-          setSubmitting(false);
-          return;
-        }
-
-        const res = await createEvent({
-          eventName: formData.get('eventName') as string,
-          startDate: startDate!.toISOString() as string,
+        const res = await executeAsync({
+          title: formData.get('title'),
+          startDate: startDate?.toISOString(),
+          endDate: endDate?.toISOString(),
+          location: formData.get('location'),
+          price: Number(formData.get('price')),
+          status: formData.get('eventStatus'),
         });
 
-        console.log(res?.data);
-        setSubmitting(false);
+        console.log('result', res);
       }}
     >
       <div className='space-y-12'>
@@ -61,7 +46,7 @@ export default function CreateEventForm() {
           <div className='mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6'>
             <div className='sm:col-span-4'>
               <label
-                htmlFor='eventname'
+                htmlFor='title'
                 className='block text-sm font-medium leading-6 text-gray-900'
               >
                 Event Name<span className='text-red-500'>*</span>
@@ -70,10 +55,10 @@ export default function CreateEventForm() {
                 <div className='flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md'>
                   <input
                     type='text'
-                    name='eventName'
-                    id='eventName'
+                    name='title'
+                    id='title'
                     required
-                    autoComplete='eventname'
+                    autoComplete='title'
                     className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
                   />
                 </div>
@@ -212,8 +197,14 @@ export default function CreateEventForm() {
         >
           Cancel
         </button>
-        <SubmitButton pending={submitting} />
+        <button
+          type='submit'
+          className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+        >
+          {status === 'executing' ? 'Submitting...' : 'Submit'}
+        </button>
       </div>
+      <p>Result: {JSON.stringify(result)}</p>
     </form>
   );
 }

@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { actionClient } from '@/app/lib/safe-action';
 
 const NewEventSchema = z.object({
-  eventName: z.string(),
+  title: z.string(),
   startDate: z.string().datetime(),
   endDate: z.string().datetime().optional(),
   location: z.string().optional(),
@@ -18,37 +18,28 @@ const NewEventSchema = z.object({
 
 export const createEvent = actionClient
   .schema(NewEventSchema)
-  .action(async ({ parsedInput: { eventName, startDate } }) => {
-    // Just for testing the useFormStatus hooks or other state hooks
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    if (eventName && startDate) {
-      try {
-        const event = await prisma.event.create({
-          data: {
-            name: eventName,
-            startDate: startDate,
-          },
-        });
-        return {
-          success: 'Event created',
-        };
-      } catch (e) {
-        return {
-          failue: 'Failed to create event',
-          error: e,
-        };
-      }
+  .action(
+    async ({
+      parsedInput: { title, startDate, location, price, endDate, status },
+    }) => {
+      // Just for testing the status hook
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const event = await prisma.event.create({
+        data: {
+          title: title,
+          startDate: startDate,
+          endDate: endDate,
+          location: location,
+          price: price,
+          status: status,
+        },
+      });
+      redirect('/events?page=1');
     }
-
-    return {
-      failure: "Coudn't create event",
-    };
-  });
-
+  );
 
 export async function getEventsCount() {
-  const count = await prisma.event.count()
+  const count = await prisma.event.count();
 
   return count;
 }
