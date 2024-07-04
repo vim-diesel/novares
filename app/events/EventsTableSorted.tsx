@@ -1,3 +1,4 @@
+'use client';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import type { Event } from '@prisma/client';
 
@@ -7,8 +8,27 @@ const statusColors: { [key: string]: string } = {
   waitlist: 'bg-yellow-100',
 };
 
-export default function EventsTableSorted({ events }: { events: Event[] }) {
+export default function EventsTableSorted({
+  events,
+  order,
+  column,
+  setOrder,
+  setColumn,
+}: {
+  events: Event[];
+  order: string;
+  column: string;
+  setOrder: React.Dispatch<React.SetStateAction<string>>;
+  setColumn: React.Dispatch<React.SetStateAction<string>>;
+}) {
+  console.log(column);
+  console.log(order);
   function handleHeaderClick(header: string) {}
+
+  const headerSelected =
+    'ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200';
+  const headerUnselected =
+    'invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible';
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -40,7 +60,7 @@ export default function EventsTableSorted({ events }: { events: Event[] }) {
                   >
                     <a href='#' className='group inline-flex'>
                       Title
-                      <span className='invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'>
+                      <span className={column === 'title' ? headerSelected : headerUnselected}>
                         <ChevronDownIcon
                           aria-hidden='true'
                           className='h-5 w-5'
@@ -54,7 +74,7 @@ export default function EventsTableSorted({ events }: { events: Event[] }) {
                   >
                     <a href='#' className='group inline-flex'>
                       Start Date
-                      <span className='ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200'>
+                      <span className={column === 'startDate' ? headerSelected : headerUnselected}>
                         <ChevronDownIcon
                           aria-hidden='true'
                           className='h-5 w-5'

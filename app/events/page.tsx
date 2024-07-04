@@ -1,11 +1,9 @@
 'use client';
 import React from 'react';
-import prisma from '@/lib/db';
 import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
 import EventsTableSorted from './EventsTableSorted';
 import { getEventsCount, getEventsMany } from '@/lib/actions/actions';
-import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
   const [eventCount, setEventCount] = React.useState(0);
@@ -14,7 +12,6 @@ export default function Page() {
   const [totalPages, setTotalPages] = React.useState(1);
   const [column, setColumn] = React.useState('startDate');
   const [order, setOrder] = React.useState('desc');
-  const searchParams = useSearchParams();
 
   React.useEffect(() => {
     const fetchEventCount = async () => {
@@ -23,10 +20,10 @@ export default function Page() {
     };
     fetchEventCount();
   }, []);
-  
+
   React.useEffect(() => {
     const fetchEventCount = async () => {
-      const events : Event[] = await getEventsMany(column, order, page);
+      const events: Event[] = await getEventsMany(column, order, page);
       setEvents(events);
     };
     fetchEventCount();
@@ -63,8 +60,18 @@ export default function Page() {
   return (
     <main className='min-h-screen'>
       <div className='mx-auto max-w-7xl mt-10 px-2 sm:px-6 lg:px-8'>
-        <EventsTableSorted events={events}  />
-        <PageNumbers currPage={page} totalPages={totalPages} setPage={setPage}/>
+        <EventsTableSorted
+          events={events}
+          order={order}
+          column={column}
+          setOrder={setOrder}
+          setColumn={setColumn}
+        />
+        <PageNumbers
+          currPage={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
       </div>
     </main>
   );
