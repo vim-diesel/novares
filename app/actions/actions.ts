@@ -14,16 +14,15 @@ const NewEventSchema = z.object({
   status: z.enum(['open', 'closed', 'waitlist']).optional(),
 });
 
-// export async function createEvent
-
 export const createEvent = actionClient
   .schema(NewEventSchema)
   .action(
     async ({
       parsedInput: { title, startDate, location, price, endDate, status },
     }) => {
-      // Just for testing the status hook
+      // Just for testing the status hook/submission button
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const event = await prisma.event.create({
         data: {
           title: title,
