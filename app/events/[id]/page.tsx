@@ -1,4 +1,4 @@
-import prisma from '@/app/lib/db';
+import prisma from '@/lib/db';
 import { notFound } from 'next/navigation';
 
 export default async function page({ params }: { params: { id: string } }) {
@@ -7,6 +7,5 @@ export default async function page({ params }: { params: { id: string } }) {
     return notFound();
   }
 
-  return <div>main</div>
-
+  return <div>main</div>;
 }

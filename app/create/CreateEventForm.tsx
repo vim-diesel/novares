@@ -18,6 +18,13 @@ export default function CreateEventForm() {
     onSuccess() {
       toast.success('Event created!');
     },
+    onError({ error }) {
+      if (error.validationErrors) {
+        toast.error('Check all required fields there pardner 🤠');
+      } else if (error.serverError) {
+        toast.error('Goose on the loose 🪿 Run. Hide. And try again later');
+      }
+    },
   });
 
   return (

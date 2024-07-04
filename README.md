@@ -1,6 +1,6 @@
 # Todo
 
-1. Check out 'aria-current' attribute for pagenumbers component. 
+1. Check out 'aria-current' attribute for pagenumbers component.
 2.
 
 ## NovaRes

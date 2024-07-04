@@ -3,7 +3,7 @@ import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
 } from '@heroicons/react/20/solid';
-import range from '@/app/utils/range';
+import range from '@/lib/range';
 
 function Breadcrumbs() {
   return (

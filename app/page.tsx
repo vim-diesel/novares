@@ -1,4 +1,4 @@
-import prisma from '@/app/lib/db';
+import prisma from '@/lib/db';
 import EventsTable from './events/EventsTable';
 import Header from './Header';
 

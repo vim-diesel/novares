@@ -1,4 +1,4 @@
-import prisma from '@/app/lib/db';
+import prisma from '@/lib/db';
 import { redirect } from 'next/navigation';
 import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
