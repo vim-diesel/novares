@@ -1,5 +1,5 @@
 'use client';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
+import HeaderArrow from './SortingArrow';
 import type { Event } from '@prisma/client';
 
 const statusColors: { [key: string]: string } = {
@@ -7,37 +7,6 @@ const statusColors: { [key: string]: string } = {
   closed: 'bg-neutral-200',
   waitlist: 'bg-yellow-100',
 };
-
-function HeaderArrow({ current, desc }: { current: boolean; desc: boolean }) {
-  const headerSelected =
-    'ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200';
-  const headerUnselected =
-    'invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible';
-
-  if (desc) {
-    return current ? (
-      <span className={headerSelected}>
-        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
-      </span>
-    ) : (
-      <span className={headerUnselected}>
-        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
-      </span>
-    );
-  }
-
-  if (!desc) {
-    return current ? (
-      <span className={headerSelected}>
-        <ChevronUpIcon aria-hidden='true' className='h-5 w-5' />
-      </span>
-    ) : (
-      <span className={headerUnselected}>
-        <ChevronUpIcon aria-hidden='true' className='h-5 w-5' />
-      </span>
-    );
-  }
-}
 
 export default function EventsTableSorted({
   events,
@@ -53,7 +22,7 @@ export default function EventsTableSorted({
   setColumn: React.Dispatch<React.SetStateAction<string>>;
 }) {
   console.log('rendering');
-  
+
   function handleHeaderClick(column: string) {
     setColumn(column);
     setDesc((prev) => !prev);
