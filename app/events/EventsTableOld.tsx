@@ -7,7 +7,7 @@ const statusColors: { [key: string]: string } = {
   waitlist: 'bg-yellow-100',
 };
 
-export default function EventsTable({ events }: { events: Event[] }) {
+export default function EventsTable({ events }: { events: Event[]  }) {
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
       <div className='sm:flex sm:items-center'>
