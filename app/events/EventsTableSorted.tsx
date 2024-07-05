@@ -29,11 +29,11 @@ function HeaderArrow({ current, desc }: { current: boolean; desc: boolean }) {
   if (!desc) {
     return current ? (
       <span className={headerSelected}>
-        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
+        <ChevronUpIcon aria-hidden='true' className='h-5 w-5' />
       </span>
     ) : (
       <span className={headerUnselected}>
-        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
+        <ChevronUpIcon aria-hidden='true' className='h-5 w-5' />
       </span>
     );
   }
@@ -52,10 +52,12 @@ export default function EventsTableSorted({
   setDesc: React.Dispatch<React.SetStateAction<boolean>>;
   setColumn: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  console.log(column);
-  console.log(desc);
-
-  function handleHeaderClick(header: string) {}
+  console.log('rendering');
+  
+  function handleHeaderClick(column: string) {
+    setColumn(column);
+    setDesc((prev) => !prev);
+  }
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -85,7 +87,12 @@ export default function EventsTableSorted({
                     scope='col'
                     className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0'
                   >
-                    <a href='#' className='group inline-flex'>
+                    <a
+                      onClick={() => {
+                        handleHeaderClick('title');
+                      }}
+                      className='group inline-flex'
+                    >
                       Title
                       <HeaderArrow current={column === 'title'} desc={desc} />
                     </a>
@@ -94,7 +101,12 @@ export default function EventsTableSorted({
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='#' className='group inline-flex'>
+                    <a
+                      onClick={() => {
+                        handleHeaderClick('startDate');
+                      }}
+                      className='group inline-flex'
+                    >
                       Start Date
                       <HeaderArrow
                         current={column === 'startDate'}
@@ -106,7 +118,12 @@ export default function EventsTableSorted({
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='#' className='group inline-flex'>
+                    <a
+                      onClick={() => {
+                        handleHeaderClick('location');
+                      }}
+                      className='group inline-flex'
+                    >
                       Location
                       <HeaderArrow
                         current={column === 'location'}
@@ -118,7 +135,12 @@ export default function EventsTableSorted({
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='#' className='group inline-flex'>
+                    <a
+                      onClick={() => {
+                        handleHeaderClick('price');
+                      }}
+                      className='group inline-flex'
+                    >
                       Price
                       <HeaderArrow current={column === 'price'} desc={desc} />
                     </a>
@@ -127,7 +149,12 @@ export default function EventsTableSorted({
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='#' className='group inline-flex'>
+                    <a
+                      onClick={() => {
+                        handleHeaderClick('status');
+                      }}
+                      className='group inline-flex'
+                    >
                       Status
                       <HeaderArrow current={column === 'status'} desc={desc} />
                     </a>
