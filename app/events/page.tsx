@@ -10,7 +10,7 @@ export default function Page() {
   const [events, setEvents] = React.useState<Event[]>([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
-  const [column, setColumn] = React.useState('startDate');
+  const [column, setColumn] = React.useState('price');
   const [desc, setDesc] = React.useState(false);
 
   React.useEffect(() => {
