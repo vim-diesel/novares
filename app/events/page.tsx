@@ -11,7 +11,7 @@ export default function Page() {
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [column, setColumn] = React.useState('startDate');
-  const [order, setOrder] = React.useState('desc');
+  const [desc, setDesc] = React.useState(false);
 
   React.useEffect(() => {
     const fetchEventCount = async () => {
@@ -23,11 +23,11 @@ export default function Page() {
 
   React.useEffect(() => {
     const fetchEventCount = async () => {
-      const events: Event[] = await getEventsMany(column, order, page);
+      const events: Event[] = await getEventsMany(column, desc, page);
       setEvents(events);
     };
     fetchEventCount();
-  }, [column, order, page]);
+  }, [column, desc, page]);
 
   React.useEffect(() => {
     const totalPages = Math.ceil(eventCount / 10);
@@ -62,9 +62,9 @@ export default function Page() {
       <div className='mx-auto max-w-7xl mt-10 px-2 sm:px-6 lg:px-8'>
         <EventsTableSorted
           events={events}
-          order={order}
+          desc={desc}
           column={column}
-          setOrder={setOrder}
+          setDesc={setDesc}
           setColumn={setColumn}
         />
         <PageNumbers

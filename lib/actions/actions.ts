@@ -45,12 +45,12 @@ export async function getEventsCount() {
 
 export async function getEventsMany(
   column: string,
-  order: string,
+  desc: boolean,
   page: number
 ) {
   const res = await prisma.event.findMany({
     orderBy: {
-      [column]: order,
+      [column]: desc ? 'desc' : 'asc',
     },
     take: 10,
     skip: (page - 1) * 10,

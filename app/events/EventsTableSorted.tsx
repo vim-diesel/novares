@@ -8,19 +8,13 @@ const statusColors: { [key: string]: string } = {
   waitlist: 'bg-yellow-100',
 };
 
-function HeaderArrow({
-  current,
-  direction,
-}: {
-  current: boolean;
-  direction: string;
-}) {
+function HeaderArrow({ current, desc }: { current: boolean; desc: boolean }) {
   const headerSelected =
     'ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200';
   const headerUnselected =
     'invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible';
 
-  if (direction === 'desc') {
+  if (desc) {
     return current ? (
       <span className={headerSelected}>
         <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
@@ -32,7 +26,7 @@ function HeaderArrow({
     );
   }
 
-  if (direction === 'asc') {
+  if (!desc) {
     return current ? (
       <span className={headerSelected}>
         <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
@@ -47,19 +41,19 @@ function HeaderArrow({
 
 export default function EventsTableSorted({
   events,
-  order,
+  desc,
   column,
-  setOrder,
+  setDesc,
   setColumn,
 }: {
   events: Event[];
-  order: string;
+  desc: boolean;
   column: string;
-  setOrder: React.Dispatch<React.SetStateAction<string>>;
+  setDesc: React.Dispatch<React.SetStateAction<boolean>>;
   setColumn: React.Dispatch<React.SetStateAction<string>>;
 }) {
   console.log(column);
-  console.log(order);
+  console.log(desc);
 
   function handleHeaderClick(header: string) {}
 
@@ -93,10 +87,7 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Title
-                      <HeaderArrow
-                        current={column === 'title'}
-                        direction={order}
-                      />
+                      <HeaderArrow current={column === 'title'} desc={desc} />
                     </a>
                   </th>
                   <th
@@ -107,7 +98,7 @@ export default function EventsTableSorted({
                       Start Date
                       <HeaderArrow
                         current={column === 'startDate'}
-                        direction={order}
+                        desc={desc}
                       />
                     </a>
                   </th>
@@ -119,7 +110,7 @@ export default function EventsTableSorted({
                       Location
                       <HeaderArrow
                         current={column === 'location'}
-                        direction={order}
+                        desc={desc}
                       />
                     </a>
                   </th>
@@ -129,7 +120,7 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Price
-                      <HeaderArrow current={column === 'price'} direction={order} />
+                      <HeaderArrow current={column === 'price'} desc={desc} />
                     </a>
                   </th>
                   <th
@@ -138,7 +129,7 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Status
-                      <HeaderArrow current={column === 'status'} direction={order} />
+                      <HeaderArrow current={column === 'status'} desc={desc} />
                     </a>
                   </th>
                   <th scope='col' className='relative py-3.5 pl-3 pr-0'>
