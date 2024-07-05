@@ -1,5 +1,5 @@
 'use client';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import type { Event } from '@prisma/client';
 
 const statusColors: { [key: string]: string } = {
@@ -7,6 +7,43 @@ const statusColors: { [key: string]: string } = {
   closed: 'bg-neutral-200',
   waitlist: 'bg-yellow-100',
 };
+
+function HeaderArrow({
+  current,
+  direction,
+}: {
+  current: boolean;
+  direction: string;
+}) {
+  const headerSelected =
+    'ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200';
+  const headerUnselected =
+    'invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible';
+
+  if (direction === 'desc') {
+    return current ? (
+      <span className={headerSelected}>
+        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
+      </span>
+    ) : (
+      <span className={headerUnselected}>
+        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
+      </span>
+    );
+  }
+
+  if (direction === 'asc') {
+    return current ? (
+      <span className={headerSelected}>
+        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
+      </span>
+    ) : (
+      <span className={headerUnselected}>
+        <ChevronDownIcon aria-hidden='true' className='h-5 w-5' />
+      </span>
+    );
+  }
+}
 
 export default function EventsTableSorted({
   events,
@@ -23,12 +60,8 @@ export default function EventsTableSorted({
 }) {
   console.log(column);
   console.log(order);
-  function handleHeaderClick(header: string) {}
 
-  const headerSelected =
-    'ml-2 flex-none rounded bg-gray-100 text-gray-900 group-hover:bg-gray-200';
-  const headerUnselected =
-    'invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible';
+  function handleHeaderClick(header: string) {}
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -60,12 +93,10 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Title
-                      <span className={column === 'title' ? headerSelected : headerUnselected}>
-                        <ChevronDownIcon
-                          aria-hidden='true'
-                          className='h-5 w-5'
-                        />
-                      </span>
+                      <HeaderArrow
+                        current={column === 'title'}
+                        direction={order}
+                      />
                     </a>
                   </th>
                   <th
@@ -74,12 +105,10 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Start Date
-                      <span className={column === 'startDate' ? headerSelected : headerUnselected}>
-                        <ChevronDownIcon
-                          aria-hidden='true'
-                          className='h-5 w-5'
-                        />
-                      </span>
+                      <HeaderArrow
+                        current={column === 'startDate'}
+                        direction={order}
+                      />
                     </a>
                   </th>
                   <th
@@ -88,12 +117,10 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Location
-                      <span className='invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'>
-                        <ChevronDownIcon
-                          aria-hidden='true'
-                          className='invisible ml-2 h-5 w-5 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'
-                        />
-                      </span>
+                      <HeaderArrow
+                        current={column === 'location'}
+                        direction={order}
+                      />
                     </a>
                   </th>
                   <th
@@ -102,12 +129,7 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Price
-                      <span className='invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'>
-                        <ChevronDownIcon
-                          aria-hidden='true'
-                          className='invisible ml-2 h-5 w-5 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'
-                        />
-                      </span>
+                      <HeaderArrow current={column === 'price'} direction={order} />
                     </a>
                   </th>
                   <th
@@ -116,12 +138,7 @@ export default function EventsTableSorted({
                   >
                     <a href='#' className='group inline-flex'>
                       Status
-                      <span className='invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'>
-                        <ChevronDownIcon
-                          aria-hidden='true'
-                          className='invisible ml-2 h-5 w-5 flex-none rounded text-gray-400 group-hover:visible group-focus:visible'
-                        />
-                      </span>
+                      <HeaderArrow current={column === 'status'} direction={order} />
                     </a>
                   </th>
                   <th scope='col' className='relative py-3.5 pl-3 pr-0'>
