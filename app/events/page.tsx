@@ -14,6 +14,7 @@ export default function Page() {
   const [desc, setDesc] = React.useState(true);
 
   React.useEffect(() => {
+    console.log('fetching event count');
     const fetchEventCount = async () => {
       const count = await getEventsCount();
       setEventCount(count);

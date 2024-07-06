@@ -35,12 +35,12 @@ export default function CreateEventForm() {
         const formData = new FormData(e.target as HTMLFormElement);
 
         const res = await executeAsync({
-          title: formData.get('title'),
-          startDate: startDate?.toISOString(),
+          title: formData.get('title') as string,
+          startDate: startDate?.toISOString() as string,
           endDate: endDate?.toISOString(),
-          location: formData.get('location'),
-          price: Number(formData.get('price')),
-          status: formData.get('eventStatus'),
+          location: formData.get('location') as string | undefined,
+          price: Number(formData.get('price')) as number | undefined,
+          status: formData.get('eventStatus') as "open" | "closed" | "waitlist" | undefined,
         });
 
         console.log('result', res);

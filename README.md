@@ -1,7 +1,8 @@
 # Todo
 
 1. Check out 'aria-current' attribute for pagenumbers component.
-2.
+2. Convert the EventsTable page to use query parameters for filtering, sorting, and pagination, allowing for it
+to be a server component.
 
 ## NovaRes
 
