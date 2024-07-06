@@ -21,7 +21,7 @@ export default function EventsTableSorted({
   setDesc: React.Dispatch<React.SetStateAction<boolean>>;
   setColumn: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  console.log('rendering');
+  // console.log('rendering');
 
   function handleHeaderClick(column: string) {
     setColumn(column);

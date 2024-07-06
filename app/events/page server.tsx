@@ -4,7 +4,7 @@ import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
 import EventsTableSorted from './EventsTableSorted';
 import EventsTableOld from './EventsTableOld';
-import { getEventsCount, getEventsMany } from '@/lib/actions/actions';
+import { getEventsCount, getEventsMany } from '@/actions/actions';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/db';
 

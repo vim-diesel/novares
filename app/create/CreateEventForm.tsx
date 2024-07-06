@@ -1,5 +1,5 @@
 'use client';
-import { createEvent } from '../../lib/actions/actions';
+import { createEvent } from '../../actions/actions';
 import React, { FormEvent } from 'react';
 import { DatePicker } from './DatePicker';
 import { useAction } from 'next-safe-action/hooks';
@@ -20,9 +20,9 @@ export default function CreateEventForm() {
     },
     onError({ error }) {
       if (error.validationErrors) {
-        toast.error('Check all required fields there pardner 🤠');
+        toast.error('入力ミス 🤨 input missing');
       } else if (error.serverError) {
-        toast.error('Server on fire ⽕🔥 Please try again later');
+        toast.error('サーバーが燃えている 🔥 server on fire');
         console.log(error);
       }
     },

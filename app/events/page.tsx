@@ -1,17 +1,46 @@
 'use client';
 import React from 'react';
+import { z } from 'zod';
 import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
 import EventsTableSorted from './EventsTableSorted';
-import { getEventsCount, getEventsMany } from '@/lib/actions/actions';
+import { getEventsCount, getEventsMany } from '@/actions/actions';
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const [eventCount, setEventCount] = React.useState(0);
   const [events, setEvents] = React.useState<Event[]>([]);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [column, setColumn] = React.useState('startDate');
   const [desc, setDesc] = React.useState(true);
+
+  const queryPage = searchParams.page;
+  const queryOrderBy = searchParams.orderBy;
+  const queryDirection = searchParams.direction;
+
+  const query = {
+    page: searchParams.page,
+    orderBy: searchParams.orderBy,
+    direction: searchParams.direction,
+  };
+
+  const searchParamsSchema = z.object({
+    page: z.coerce.number().int().positive().optional(),
+    orderBy: z
+      .enum(['startDate', 'endDate', 'location', 'price', 'status'])
+      .optional(),
+    direction: z.enum(['desc', 'asc']).optional(),
+  });
+
+  const parseRes = searchParamsSchema.safeParse(query);
+
+  if (!parseRes.success) {
+    // handle query error
+  }
 
   React.useEffect(() => {
     console.log('fetching event count');
