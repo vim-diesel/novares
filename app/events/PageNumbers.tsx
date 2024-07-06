@@ -4,6 +4,7 @@ import {
   ArrowLongRightIcon,
 } from '@heroicons/react/20/solid';
 import range from '@/lib/range';
+import { useRouter } from 'next/navigation';
 
 function Breadcrumbs() {
   return (
@@ -16,14 +17,14 @@ function Breadcrumbs() {
 export default function PageNumbers({
   currPage,
   totalPages,
-  setPage,
 }: {
   currPage: number;
   totalPages: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const router = useRouter()
+
   const handlePageClick = (page: number) => {
-    setPage(page);
+    router.push(`/events?page=${page}`);
   };
 
   return (

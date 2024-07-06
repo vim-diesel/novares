@@ -1,6 +1,8 @@
-'use client';
+// 'use client';
+import Link from 'next/link';
 import HeaderArrow from './SortingArrow';
 import type { Event } from '@prisma/client';
+import { request } from 'http';
 
 const statusColors: { [key: string]: string } = {
   open: 'bg-green-200',
@@ -11,22 +13,22 @@ const statusColors: { [key: string]: string } = {
 export default function EventsTableSorted({
   events,
   desc,
-  column,
-  setDesc,
-  setColumn,
+  orderBy,
+  searchParams,
 }: {
-  events: Event[];
+  events: Event[] | undefined;
   desc: boolean;
-  column: string;
-  setDesc: React.Dispatch<React.SetStateAction<boolean>>;
-  setColumn: React.Dispatch<React.SetStateAction<string>>;
+  orderBy:
+    | 'title'
+    | 'startDate'
+    | 'endDate'
+    | 'location'
+    | 'price'
+    | 'status'
+    | undefined;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  // console.log('rendering');
-
-  function handleHeaderClick(column: string) {
-    setColumn(column);
-    setDesc((prev) => !prev);
-  }
+  console.log(searchParams);
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -56,29 +58,26 @@ export default function EventsTableSorted({
                     scope='col'
                     className='py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0'
                   >
-                    <a
-                      onClick={() => {
-                        handleHeaderClick('title');
-                      }}
+                    <Link
+                      href={`?${new URLSearchParams({
+                        ...searchParams,
+                        orderBy: 'title',
+                        desc: (orderBy === 'title' ? !desc : desc).toString(),
+                      })}`}
                       className='group inline-flex'
                     >
                       Title
-                      <HeaderArrow current={column === 'title'} desc={desc} />
-                    </a>
+                      <HeaderArrow current={orderBy === 'title'} desc={desc} />
+                    </Link>
                   </th>
                   <th
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a
-                      onClick={() => {
-                        handleHeaderClick('startDate');
-                      }}
-                      className='group inline-flex'
-                    >
+                    <a href={`/events`} className='group inline-flex'>
                       Start Date
                       <HeaderArrow
-                        current={column === 'startDate'}
+                        current={orderBy === 'startDate'}
                         desc={desc}
                       />
                     </a>
@@ -87,15 +86,10 @@ export default function EventsTableSorted({
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a
-                      onClick={() => {
-                        handleHeaderClick('location');
-                      }}
-                      className='group inline-flex'
-                    >
+                    <a href='/events' className='group inline-flex'>
                       Location
                       <HeaderArrow
-                        current={column === 'location'}
+                        current={orderBy === 'location'}
                         desc={desc}
                       />
                     </a>
@@ -104,28 +98,18 @@ export default function EventsTableSorted({
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a
-                      onClick={() => {
-                        handleHeaderClick('price');
-                      }}
-                      className='group inline-flex'
-                    >
+                    <a href='/events' className='group inline-flex'>
                       Price
-                      <HeaderArrow current={column === 'price'} desc={desc} />
+                      <HeaderArrow current={orderBy === 'price'} desc={desc} />
                     </a>
                   </th>
                   <th
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a
-                      onClick={() => {
-                        handleHeaderClick('status');
-                      }}
-                      className='group inline-flex'
-                    >
+                    <a href='/events' className='group inline-flex'>
                       Status
-                      <HeaderArrow current={column === 'status'} desc={desc} />
+                      <HeaderArrow current={orderBy === 'status'} desc={desc} />
                     </a>
                   </th>
                   <th scope='col' className='relative py-3.5 pl-3 pr-0'>
@@ -134,7 +118,7 @@ export default function EventsTableSorted({
                 </tr>
               </thead>
               <tbody className='divide-y divide-gray-200 bg-white'>
-                {events.map((event) => (
+                {events?.map((event) => (
                   <tr key={event.id}>
                     <td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0'>
                       {event.title}
