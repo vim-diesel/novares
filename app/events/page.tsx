@@ -5,19 +5,13 @@ import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
 import EventsTableSorted from './EventsTableSorted';
 import { getEventsCount, getEventsMany } from '@/actions/actions';
+import { redirect } from 'next/navigation';
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  // const [eventCount, setEventCount] = React.useState(0);
-  // const [events, setEvents] = React.useState<Event[]>([]);
-  // const [page, setPage] = React.useState<number>(1);
-  // const [totalPages, setTotalPages] = React.useState(1);
-  // const [column, setColumn] = React.useState('startDate');
-  // const [desc, setDesc] = React.useState(true);
-
   const query = {
     page: searchParams.page,
     orderBy: searchParams.orderBy,
@@ -27,10 +21,12 @@ export default async function Page({
   const eventCount = await getEventsCount();
   const totalPages = Math.ceil(eventCount / 10);
 
+  console.log(totalPages);
+
   const searchParamsSchema = z.object({
-    page: z.coerce.number().int().positive().optional(),
+    page: z.coerce.number().int().positive().lte(totalPages).optional(),
     orderBy: z
-      .enum(['title','startDate', 'endDate', 'location', 'price', 'status'])
+      .enum(['title', 'startDate', 'endDate', 'location', 'price', 'status'])
       .optional(),
     direction: z.enum(['desc', 'asc']).optional(),
   });
@@ -46,30 +42,22 @@ export default async function Page({
   }
 
   if (!parseRes.success) {
-    return <div>Invalid query params</div>;
+    const zodFieldErrors = parseRes.error.flatten().fieldErrors;
+
+    if (zodFieldErrors.page) {
+      redirect(`?${new URLSearchParams({ ...searchParams, page: '1' })}`);
+    }
+    if (zodFieldErrors.orderBy) {
+      redirect(
+        `?${new URLSearchParams({ ...searchParams, orderBy: 'startDate' })}`
+      );
+    }
+    if (zodFieldErrors.direction) {
+      redirect(
+        `?${new URLSearchParams({ ...searchParams, direction: 'desc' })}`
+      );
+    }
   }
-
-  // React.useEffect(() => {
-  //   console.log('fetching event count');
-  //   const fetchEventCount = async () => {
-  //     const count = await getEventsCount();
-  //     setEventCount(count);
-  //   };
-  //   fetchEventCount();
-  // }, []);
-
-  // React.useEffect(() => {
-  //   const fetchEventCount = async () => {
-  //     const events: Event[] = await getEventsMany(column, desc, parseRes.data?.page || 1);
-  //     setEvents(events);
-  //   };
-  //   fetchEventCount();
-  // }, [column, desc, parseRes.data?.page]);
-
-  // React.useEffect(() => {
-  //   const totalPages = Math.ceil(eventCount / 10);
-  //   setTotalPages(totalPages);
-  // }, [eventCount]);
 
   return (
     <main className='min-h-screen'>
