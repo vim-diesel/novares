@@ -28,7 +28,6 @@ export default function EventsTableSorted({
     | undefined;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
       <div className='sm:flex sm:items-center'>
@@ -61,55 +60,107 @@ export default function EventsTableSorted({
                       href={`?${new URLSearchParams({
                         ...searchParams,
                         orderBy: 'title',
-                        desc: (orderBy === 'title' ? 'asc' : 'desc').toString(),
+                        direction: (orderBy === 'title' && direction === 'desc'
+                          ? 'asc'
+                          : 'desc'
+                        ).toString(),
                       })}`}
                       className='group inline-flex'
                     >
                       Title
-                      <HeaderArrow current={orderBy === 'title'} desc={direction === 'desc'} />
+                      <HeaderArrow
+                        current={orderBy === 'title'}
+                        desc={direction === 'desc'}
+                      />
                     </Link>
                   </th>
                   <th
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href={`/events`} className='group inline-flex'>
+                    <Link
+                      href={`?${new URLSearchParams({
+                        ...searchParams,
+                        orderBy: 'startDate',
+                        direction: (orderBy === 'startDate' && direction === 'desc'
+                          ? 'asc'
+                          : 'desc'
+                        ).toString(),
+                      })}`}
+                      className='group inline-flex'
+                    >
                       Start Date
                       <HeaderArrow
                         current={orderBy === 'startDate'}
                         desc={direction === 'desc'}
                       />
-                    </a>
+                    </Link>
                   </th>
                   <th
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='/events' className='group inline-flex'>
+                    <Link
+                      href={`?${new URLSearchParams({
+                        ...searchParams,
+                        orderBy: 'location',
+                        direction: (orderBy === 'location' && direction === 'desc'
+                          ? 'asc'
+                          : 'desc'
+                        ).toString(),
+                      })}`}
+                      className='group inline-flex'
+                    >
                       Location
                       <HeaderArrow
                         current={orderBy === 'location'}
                         desc={direction === 'desc'}
                       />
-                    </a>
+                    </Link>
                   </th>
                   <th
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='/events' className='group inline-flex'>
+                    <Link
+                      href={`?${new URLSearchParams({
+                        ...searchParams,
+                        orderBy: 'price',
+                        direction: (orderBy === 'price' && direction === 'desc'
+                          ? 'asc'
+                          : 'desc'
+                        ).toString(),
+                      })}`}
+                      className='group inline-flex'
+                    >
                       Price
-                      <HeaderArrow current={orderBy === 'price'} desc={direction === 'desc'} />
-                    </a>
+                      <HeaderArrow
+                        current={orderBy === 'price'}
+                        desc={direction === 'desc'}
+                      />
+                    </Link>
                   </th>
                   <th
                     scope='col'
                     className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
                   >
-                    <a href='/events' className='group inline-flex'>
+                    <Link
+                      href={`?${new URLSearchParams({
+                        ...searchParams,
+                        orderBy: 'status',
+                        direction: (orderBy === 'status' && direction === 'desc'
+                          ? 'asc'
+                          : 'desc'
+                        ).toString(),
+                      })}`}
+                      className='group inline-flex'
+                    >
                       Status
-                      <HeaderArrow current={orderBy === 'status'} desc={direction === 'desc'} />
-                    </a>
+                      <HeaderArrow
+                        current={orderBy === 'status'}
+                        desc={direction === 'desc'}
+                      />
+                    </Link>
                   </th>
                   <th scope='col' className='relative py-3.5 pl-3 pr-0'>
                     <span className='sr-only'>Edit</span>
