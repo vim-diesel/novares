@@ -32,7 +32,9 @@ Uses NextJS, Prisma, sqlite, and TailwindCSS.
 ## Installation
 
 1. Clone the repository.
-2. npm run dev
+2. npx prisma db push
+3. npx prisma db seed
+4. npm run dev
 
 ## Usage
 
