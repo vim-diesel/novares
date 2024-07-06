@@ -12,12 +12,12 @@ const statusColors: { [key: string]: string } = {
 
 export default function EventsTableSorted({
   events,
-  desc,
+  direction,
   orderBy,
   searchParams,
 }: {
   events: Event[] | undefined;
-  desc: boolean;
+  direction: string;
   orderBy:
     | 'title'
     | 'startDate'
@@ -28,7 +28,6 @@ export default function EventsTableSorted({
     | undefined;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  console.log(searchParams);
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
@@ -62,12 +61,12 @@ export default function EventsTableSorted({
                       href={`?${new URLSearchParams({
                         ...searchParams,
                         orderBy: 'title',
-                        desc: (orderBy === 'title' ? !desc : desc).toString(),
+                        desc: (orderBy === 'title' ? 'asc' : 'desc').toString(),
                       })}`}
                       className='group inline-flex'
                     >
                       Title
-                      <HeaderArrow current={orderBy === 'title'} desc={desc} />
+                      <HeaderArrow current={orderBy === 'title'} desc={direction === 'desc'} />
                     </Link>
                   </th>
                   <th
@@ -78,7 +77,7 @@ export default function EventsTableSorted({
                       Start Date
                       <HeaderArrow
                         current={orderBy === 'startDate'}
-                        desc={desc}
+                        desc={direction === 'desc'}
                       />
                     </a>
                   </th>
@@ -90,7 +89,7 @@ export default function EventsTableSorted({
                       Location
                       <HeaderArrow
                         current={orderBy === 'location'}
-                        desc={desc}
+                        desc={direction === 'desc'}
                       />
                     </a>
                   </th>
@@ -100,7 +99,7 @@ export default function EventsTableSorted({
                   >
                     <a href='/events' className='group inline-flex'>
                       Price
-                      <HeaderArrow current={orderBy === 'price'} desc={desc} />
+                      <HeaderArrow current={orderBy === 'price'} desc={direction === 'desc'} />
                     </a>
                   </th>
                   <th
@@ -109,7 +108,7 @@ export default function EventsTableSorted({
                   >
                     <a href='/events' className='group inline-flex'>
                       Status
-                      <HeaderArrow current={orderBy === 'status'} desc={desc} />
+                      <HeaderArrow current={orderBy === 'status'} desc={direction === 'desc'} />
                     </a>
                   </th>
                   <th scope='col' className='relative py-3.5 pl-3 pr-0'>

@@ -39,18 +39,17 @@ export const createEvent = actionClient
 
 export async function getEventsCount() {
   const count = await prisma.event.count();
-
   return count;
 }
 
 export async function getEventsMany(
   column: string,
-  desc: boolean,
+  direction: string,
   page: number
 ) {
   const res = await prisma.event.findMany({
     orderBy: {
-      [column]: desc ? 'desc' : 'asc',
+      [column]: direction,
     },
     take: 10,
     skip: (page - 1) * 10,

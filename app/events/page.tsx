@@ -21,8 +21,6 @@ export default async function Page({
   const eventCount = await getEventsCount();
   const totalPages = Math.ceil(eventCount / 10);
 
-  console.log(totalPages);
-
   const searchParamsSchema = z.object({
     page: z.coerce.number().int().positive().lte(totalPages).optional(),
     orderBy: z
@@ -32,15 +30,9 @@ export default async function Page({
   });
 
   const parseRes = searchParamsSchema.safeParse(query);
-  let events: Event[] = [];
-  if (parseRes.success) {
-    events = await getEventsMany(
-      parseRes.data.orderBy || 'startDate',
-      parseRes.data.direction === 'desc' || true,
-      parseRes.data.page || 1
-    );
-  }
 
+  // If any of the query params are invalid, redirect to a valid URL,
+  // overwriting the invalid query params with valid defaults.
   if (!parseRes.success) {
     const zodFieldErrors = parseRes.error.flatten().fieldErrors;
 
@@ -59,12 +51,21 @@ export default async function Page({
     }
   }
 
+  let events: Event[] = [];
+  if (parseRes.success) {
+    events = await getEventsMany(
+      parseRes.data.orderBy || 'startDate',
+      parseRes.data.direction || 'desc',
+      parseRes.data.page || 1
+    );
+  }
+
   return (
     <main className='min-h-screen'>
       <div className='mx-auto max-w-7xl mt-10 px-2 sm:px-6 lg:px-8'>
         <EventsTableSorted
           events={events}
-          desc={parseRes.data?.direction === 'desc' || true}
+          direction={parseRes.data?.direction || 'desc'}
           orderBy={parseRes.data?.orderBy || 'startDate'}
           searchParams={searchParams}
         />
