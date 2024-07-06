@@ -1,7 +1,16 @@
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  return new PrismaClient().$extends({
+    query: {
+      event: {
+        async findMany({ model, operation, args, query }) {
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+          return query(args);
+        }, // in this case, we add a query to the `user` model
+      },
+    },
+  });
 };
 
 declare const globalThis: {
