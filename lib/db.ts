@@ -6,7 +6,7 @@ const prismaClientSingleton = () => {
       event: {
         async findMany({ model, operation, args, query }) {
           // Uncomment this line to test the delay
-          // await new Promise((resolve) => setTimeout(resolve, 5000));
+          await new Promise((resolve) => setTimeout(resolve, 5000));
           return query(args);
         }, // in this case, we add a query to the `user` model
       },
