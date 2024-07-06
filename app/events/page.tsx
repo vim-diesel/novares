@@ -1,5 +1,5 @@
 // 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { z } from 'zod';
 import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
@@ -63,12 +63,14 @@ export default async function Page({
   return (
     <main className='min-h-screen'>
       <div className='mx-auto max-w-7xl mt-10 px-2 sm:px-6 lg:px-8'>
-        <EventsTableSorted
-          events={events}
-          direction={parseRes.data?.direction || 'desc'}
-          orderBy={parseRes.data?.orderBy || 'startDate'}
-          searchParams={searchParams}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <EventsTableSorted
+            events={events}
+            direction={parseRes.data?.direction || 'desc'}
+            orderBy={parseRes.data?.orderBy || 'startDate'}
+            searchParams={searchParams}
+          />
+        </Suspense>
         <PageNumbers
           currPage={parseRes.data?.page || 1}
           totalPages={totalPages}

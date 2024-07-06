@@ -1,9 +1,4 @@
-import prisma from '@/lib/db';
-import EventsTable from './events/EventsTableOld';
-import Header from './Header';
-
 export default async function Home() {
-  const events = await prisma.event.findMany();
 
   return (
     <main className='min-h-screen'>
