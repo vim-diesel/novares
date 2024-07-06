@@ -17,14 +17,17 @@ function Breadcrumbs() {
 export default function PageNumbers({
   currPage,
   totalPages,
+  searchParams,
 }: {
   currPage: number;
   totalPages: number;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handlePageClick = (page: number) => {
-    router.push(`/events?page=${page}`);
+    const newUrlParams = new URLSearchParams({ ...searchParams, page: page.toString() });
+    router.push(`?${newUrlParams}`);
   };
 
   return (

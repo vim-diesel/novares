@@ -47,6 +47,12 @@ export async function getEventsMany(
   direction: string,
   page: number
 ) {
+
+  // This makes any page or caloumn order selection freeze the app
+  // We are calling this function on every sort/page change...
+  // Find a way to cache it and sort/ paginate in the app?
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
   const res = await prisma.event.findMany({
     orderBy: {
       [column]: direction,

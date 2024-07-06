@@ -168,6 +168,7 @@ export default function EventsTableSorted({
                 </tr>
               </thead>
               <tbody className='divide-y divide-gray-200 bg-white'>
+                {events?.length === 0 && (<div className='text-center'>No events found</div>)}
                 {events?.map((event) => (
                   <tr key={event.id}>
                     <td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0'>

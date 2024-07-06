@@ -74,6 +74,7 @@ export default async function Page({
         <PageNumbers
           currPage={parseRes.data?.page || 1}
           totalPages={totalPages}
+          searchParams={searchParams}
         />
       </div>
     </main>

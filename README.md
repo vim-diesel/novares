@@ -1,8 +1,17 @@
 # Todo
 
+```typescript
 1. Check out 'aria-current' attribute for pagenumbers component.
-2. Convert the EventsTable page to use query parameters for filtering, sorting, and pagination, allowing for it
-to be a server component.
+2. Find out why adding a delay of 5 seconds on the findMany call in actions
+  is making everything so slow
+
+  // This makes any page or caloumn order selection freeze the app
+  // We are calling this function on every sort/page change...
+  // Find a way to cache it and sort/ paginate in the app?
+   await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  const res = await prisma.event.findMany({
+```
 
 ## NovaRes
 
