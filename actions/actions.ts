@@ -3,7 +3,7 @@
 import prisma from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { actionClient } from '@/app/lib/safe-action';
+import { actionClient } from '@/lib/safe-action';
 
 const NewEventSchema = z.object({
   title: z.string(),
