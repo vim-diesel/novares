@@ -5,13 +5,12 @@ const prismaClientSingleton = () => {
     query: {
       event: {
         async findMany({ model, operation, args, query }) {
-          // Uncomment this line to test the delay
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-          return query(args);
-        }, // in this case, we add a query to the `user` model
+          console.log('fetching data with prisma: ', args);
+          return query(args)
+        },
       },
     },
-  });
+  })
 };
 
 declare const globalThis: {

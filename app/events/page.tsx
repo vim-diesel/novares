@@ -1,11 +1,11 @@
-// 'use client';
-import React, { Suspense } from 'react';
 import { z } from 'zod';
 import PageNumbers from './PageNumbers';
 import type { Event } from '@prisma/client';
 import EventsTableSorted from './EventsTableSorted';
 import { getEventsCount, getEventsMany } from '@/actions/actions';
 import { redirect } from 'next/navigation';
+import prisma from '@/lib/db';
+import { parse } from 'path';
 
 export default async function Page({
   searchParams,
@@ -53,24 +53,25 @@ export default async function Page({
 
   let events: Event[] = [];
   if (parseRes.success) {
-    events = await getEventsMany(
-      parseRes.data.orderBy || 'startDate',
-      parseRes.data.direction || 'desc',
-      parseRes.data.page || 1
-    );
+    
+    events = await prisma.event.findMany({
+      orderBy: {
+        [parseRes.data?.orderBy || 'startDate']: parseRes.data?.direction || 'desc',
+      },
+      take: 10,
+      skip: ((parseRes.data?.page || 1) - 1) * 10,
+    });
   }
 
   return (
     <main className='min-h-screen'>
       <div className='mx-auto max-w-7xl mt-10 px-2 sm:px-6 lg:px-8'>
-        <Suspense fallback={<div>Loading...</div>}>
-          <EventsTableSorted
-            events={events}
-            direction={parseRes.data?.direction || 'desc'}
-            orderBy={parseRes.data?.orderBy || 'startDate'}
-            searchParams={searchParams}
-          />
-        </Suspense>
+        <EventsTableSorted
+          events={events}
+          direction={parseRes.data?.direction || 'desc'}
+          orderBy={parseRes.data?.orderBy || 'startDate'}
+          searchParams={searchParams}
+        />
         <PageNumbers
           currPage={parseRes.data?.page || 1}
           totalPages={totalPages}

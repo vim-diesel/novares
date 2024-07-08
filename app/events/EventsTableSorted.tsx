@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import HeaderArrow from './SortingArrow';
 import type { Event } from '@prisma/client';
-import { request } from 'http';
 
 const statusColors: { [key: string]: string } = {
   open: 'bg-green-200',
@@ -28,6 +27,37 @@ export default function EventsTableSorted({
     | undefined;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  function sortEvents(key: string, direction: string, events: Event[]) {
+    return events.sort((a, b) => {
+      const valueA = a[key as keyof Event];
+      const valueB = b[key as keyof Event];
+
+      if (direction === 'desc') {
+        if (valueA instanceof Date && valueB instanceof Date) {
+          return valueB.getTime() - valueA.getTime();
+        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
+          return valueB - valueA;
+        } else if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return valueB.localeCompare(valueA);
+        }
+      } else if (direction === 'asc'){
+        if (valueA instanceof Date && valueB instanceof Date) {
+          return valueA.getTime() - valueB.getTime();
+        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
+          return valueA - valueB;
+        } else if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return valueA.localeCompare(valueB);
+        }
+      }
+
+      return 0;
+    });
+  }
+
+  if (events) {
+    sortEvents(orderBy || 'startDate', direction, events);
+  }
+
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
       <div className='sm:flex sm:items-center'>
@@ -82,7 +112,8 @@ export default function EventsTableSorted({
                       href={`?${new URLSearchParams({
                         ...searchParams,
                         orderBy: 'startDate',
-                        direction: (orderBy === 'startDate' && direction === 'desc'
+                        direction: (orderBy === 'startDate' &&
+                        direction === 'desc'
                           ? 'asc'
                           : 'desc'
                         ).toString(),
@@ -104,7 +135,8 @@ export default function EventsTableSorted({
                       href={`?${new URLSearchParams({
                         ...searchParams,
                         orderBy: 'location',
-                        direction: (orderBy === 'location' && direction === 'desc'
+                        direction: (orderBy === 'location' &&
+                        direction === 'desc'
                           ? 'asc'
                           : 'desc'
                         ).toString(),
@@ -168,7 +200,9 @@ export default function EventsTableSorted({
                 </tr>
               </thead>
               <tbody className='divide-y divide-gray-200 bg-white'>
-                {events?.length === 0 && (<div className='text-center'>No events found</div>)}
+                {events?.length === 0 && (
+                  <div className='text-center'>No events found</div>
+                )}
                 {events?.map((event) => (
                   <tr key={event.id}>
                     <td className='whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0'>
