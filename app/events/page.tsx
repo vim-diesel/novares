@@ -53,7 +53,6 @@ export default async function Page({
 
   let events: Event[] = [];
   if (parseRes.success) {
-    
     events = await prisma.event.findMany({
       orderBy: {
         [parseRes.data?.orderBy || 'startDate']: parseRes.data?.direction || 'desc',
