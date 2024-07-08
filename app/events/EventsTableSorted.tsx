@@ -27,36 +27,6 @@ export default function EventsTableSorted({
     | undefined;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  function sortEvents(key: string, direction: string, events: Event[]) {
-    return events.sort((a, b) => {
-      const valueA = a[key as keyof Event];
-      const valueB = b[key as keyof Event];
-
-      if (direction === 'desc') {
-        if (valueA instanceof Date && valueB instanceof Date) {
-          return valueB.getTime() - valueA.getTime();
-        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
-          return valueB - valueA;
-        } else if (typeof valueA === 'string' && typeof valueB === 'string') {
-          return valueB.localeCompare(valueA);
-        }
-      } else if (direction === 'asc'){
-        if (valueA instanceof Date && valueB instanceof Date) {
-          return valueA.getTime() - valueB.getTime();
-        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
-          return valueA - valueB;
-        } else if (typeof valueA === 'string' && typeof valueB === 'string') {
-          return valueA.localeCompare(valueB);
-        }
-      }
-
-      return 0;
-    });
-  }
-
-  if (events) {
-    sortEvents(orderBy || 'startDate', direction, events);
-  }
 
   return (
     <div className='px-4 sm:px-6 lg:px-8'>
