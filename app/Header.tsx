@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState } from 'react';
@@ -8,7 +9,7 @@ import Link from 'next/link';
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Events', href: '/events' },
-  { name: 'Calendar', href: '/calendar'},
+  { name: 'Calendar', href: '/calendar' },
   { name: 'Create', href: '/create' },
 ];
 
@@ -29,7 +30,6 @@ export default function Header() {
               alt=''
             />
             <span className='font-extrabold'>NovaRes</span>
-
           </Link>
         </div>
         <div className='flex lg:hidden'>
