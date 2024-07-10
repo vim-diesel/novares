@@ -235,7 +235,6 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
           </button>
         </div>
 
-        {/* List of events */}
         <ol className='mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8'>
           {currentEvents.map((event) => (
             <li
