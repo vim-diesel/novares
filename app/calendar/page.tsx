@@ -7,23 +7,6 @@ import { monthStringToNumber } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
-const monthEnum = z.enum([
-  'january',
-  'february',
-  'march',
-  'april',
-  'may',
-  'june',
-  'july',
-  'august',
-  'september',
-  'october',
-  'november',
-  'december',
-]);
-
-type Month = z.infer<typeof monthEnum>;
-
 export default async function Page() {
 
   const events: Event[] = await prisma.event.findMany();
