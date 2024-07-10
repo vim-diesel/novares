@@ -104,18 +104,15 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );
-  const [selectedYear, selectedMonth, selectedDay] = selectedDate.split('-').map((num) => parseInt(num, 10));
-  const selectedMonthName = new Date(selectedYear,selectedMonth, selectedDay).toLocaleString('default', {
+  // To get correct month name, split the date string and create a new Date object
+  // to avoid timezone issues.
+  const [year, month, day] = selectedDate.split('-').map((num) => parseInt(num, 10));
+  const selectedMonthName = new Date(year, month, day).toLocaleString('default', {
     month: 'long',
   });
-
-  React.useEffect(() => {
-    
-  }, [selectedMonth]);
-
-
+  
   const days = generateCalendarDays(selectedDate);
-
+  
   function handleDayClick(date: string) {
     setSelectedDate(date);
   }
