@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
+
+
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
   CalendarIcon,
@@ -8,7 +10,7 @@ import {
   ChevronRightIcon,
   EllipsisHorizontalIcon,
   MapPinIcon,
-  CurrencyDollarIcon
+  CurrencyDollarIcon,
 } from '@heroicons/react/20/solid';
 import { Event } from '@prisma/client';
 import React from 'react';
@@ -152,9 +154,7 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
     setCurrentEvents(filterEventsByDate(date, events));
   }
 
-  function handleMonthClick() {
-
-  }
+  function handleMonthClick() {}
 
   return (
     <div>
@@ -279,6 +279,18 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
                       />
                     </dt>
                     <dd>{event.location}</dd>
+                  </div>
+                  <div className='mt-2 flex items-start space-x-3'>
+                    <dt className='mt-0.5'>
+                      <span className='sr-only'>Date</span>
+                      <CurrencyDollarIcon
+                        className='h-5 w-5 text-gray-400'
+                        aria-hidden='true'
+                      />
+                    </dt>
+                    <dd>
+                      {!event.price ? 'Contact for price' : `$${event.price}`}
+                    </dd>
                   </div>
                 </dl>
               </div>

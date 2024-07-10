@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { monthStringToNumber } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 const monthEnum = z.enum([
   'january',
   'february',
@@ -22,38 +24,9 @@ const monthEnum = z.enum([
 
 type Month = z.infer<typeof monthEnum>;
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  // function getCurrentMonth(): Month {
-  //   const date = new Date();
-  //   const month = date.toLocaleString('default', { month: 'long' });
-  //   return month.toLowerCase() as Month;
-  // }
-
-  // const query = {
-  //   month: searchParams.month,
-  //   day: searchParams.day,
-  // };
-
-  // const searchParamsSchema = z.object({
-  //   month: monthEnum.optional(),
-  //   day: z.coerce.number().int().gt(0).lte(31).optional(),
-  // });
-
-  // const zres = searchParamsSchema.safeParse(query);
-
-  // if (!zres.success) {
-  //   redirect(
-  //     `?${new URLSearchParams({ ...searchParams, month: getCurrentMonth() })}`
-  //   );
-  // }
+export default async function Page() {
 
   const events: Event[] = await prisma.event.findMany();
-  // const month = monthStringToNumber(zres.data.month || getCurrentMonth());
-  // const month = new Date().getMonth();
 
   return (
     <main className='min-h-screen'>
