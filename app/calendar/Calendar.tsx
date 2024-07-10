@@ -66,8 +66,6 @@ function generateCalendarDays(
 
   const firstDayOfMonth = new Date(yearStr, month, 1);
   const lastDayOfMonth = new Date(yearStr, month + 1, 0);
-  console.log('firstDayOfMonth: ', firstDayOfMonth);
-  console.log('lastDayOfMonth: ', lastDayOfMonth);
 
   // Find start date for the calendar view, typically the previous Sunday of the first day of the month
   let startDate = new Date(firstDayOfMonth);
@@ -76,9 +74,6 @@ function generateCalendarDays(
   // Find end date for the calendar view, typically the next Saturday after the last day of the month
   let endDate = new Date(lastDayOfMonth);
   endDate.setDate(endDate.getDate() + (6 - endDate.getDay())); // Adjust to the next Saturday
-
-  console.log('startDate: ', startDate);
-  console.log('endDate: ', endDate);
 
   for (
     let date = new Date(startDate);
