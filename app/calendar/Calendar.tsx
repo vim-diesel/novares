@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
   EllipsisHorizontalIcon,
   MapPinIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/20/solid';
 import { Event } from '@prisma/client';
 import React from 'react';
@@ -149,6 +150,10 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
   function handleDayClick(date: string, events: Event[] | undefined) {
     setSelectedDate(date);
     setCurrentEvents(filterEventsByDate(date, events));
+  }
+
+  function handleMonthClick() {
+
   }
 
   return (
