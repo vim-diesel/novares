@@ -1,9 +1,6 @@
 import prisma from '@/lib/db';
 import Calendar from './Calendar';
 import { Event } from '@prisma/client';
-import { z } from 'zod';
-import { redirect } from 'next/navigation';
-import { monthStringToNumber } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
