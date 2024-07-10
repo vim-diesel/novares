@@ -128,8 +128,8 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
     new Date().toISOString().split('T')[0]
   );
   // our list of events filtered to the selectedDate
-  const [currentEvents, setCurrentEvents] = useState<Event[] | undefined>(
-    events
+  const [currentEvents, setCurrentEvents] = useState<Event[]>(
+    filterEventsByDate(selectedDate, events)
   );
 
   // To get correct month name, split the date string and create a new Date object
@@ -245,9 +245,9 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
 
         {/* List of events */}
         <ol className='mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-7 xl:col-span-8'>
-          {meetings.map((meeting) => (
+          {currentEvents.map((event) => (
             <li
-              key={meeting.id}
+              key={event.id}
               className='relative flex space-x-6 py-6 xl:static'
             >
               <img
@@ -257,7 +257,7 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
               />
               <div className='flex-auto'>
                 <h3 className='pr-10 font-semibold text-gray-900 xl:pr-0'>
-                  {meeting.name}
+                  {event.title}
                 </h3>
                 <dl className='mt-2 flex flex-col text-gray-500 xl:flex-row'>
                   <div className='flex items-start space-x-3'>
@@ -269,8 +269,8 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
                       />
                     </dt>
                     <dd>
-                      <time dateTime={meeting.datetime}>
-                        {meeting.date} at {meeting.time}
+                      <time dateTime={event.startDate.toISOString()}>
+                        {event.startDate.toDateString()}
                       </time>
                     </dd>
                   </div>
@@ -282,7 +282,7 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
                         aria-hidden='true'
                       />
                     </dt>
-                    <dd>{meeting.location}</dd>
+                    <dd>{event.location}</dd>
                   </div>
                 </dl>
               </div>
