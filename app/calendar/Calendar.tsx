@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-
-
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import {
   CalendarIcon,
