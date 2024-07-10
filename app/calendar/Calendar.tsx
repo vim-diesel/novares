@@ -146,14 +146,6 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
 
   const days = generateCalendarDays(selectedDate, events);
 
-  // React.useEffect(() => {
-  //   setCurrentEvents(events?.filter((event) => {
-  //     const [eventYear, eventMonth, eventDay] = event.startDate.toISOString().split('T')[0].split('-').map((num) => parseInt(num, 10));
-  //     return day === eventDay && month === eventMonth && year === eventYear;
-  //   }));
-  //   console.log(currentEvents);
-  // }, [events, currentEvents, day, month, year]);
-
   function handleDayClick(date: string, events: Event[] | undefined) {
     setSelectedDate(date);
     setCurrentEvents(filterEventsByDate(date, events));
