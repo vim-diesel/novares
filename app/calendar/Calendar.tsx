@@ -42,18 +42,20 @@ function classNames(...classes: string[]) {
 }
 
 function generateCalendarDays(
-  selectedDate: string
+  selectedDate: string,
+  events: Event[] | undefined
 ): Array<{
   date: string;
   isCurrentMonth?: boolean;
   isToday?: boolean;
   isSelected?: boolean;
+  hasEvents?: boolean;
 }> {
   const days = [];
 
   // To ensure the correct month is selected, regardless of time zone,
   // we have to split the selected date string and create a new date object.
-  // If we pass the Date constructor a string without a timezone, 
+  // If we pass the Date constructor a string without a timezone,
   // midnight @ UTC is still the previous day in local time.
   // so we can't use new Date('2024-07-01') directly.
 
@@ -84,37 +86,77 @@ function generateCalendarDays(
     const isCurrentMonth = date.getMonth() === month;
     const isToday = dateStr === new Date().toISOString().split('T')[0];
     const isSelected = dateStr === selectedDate;
+    const hasEvents = filterEventsByDate(dateStr, events).length > 0;
 
     days.push({
       date: dateStr,
       ...(isCurrentMonth && { isCurrentMonth }),
       ...(isToday && { isToday }),
       ...(isSelected && { isSelected }),
+      ...(hasEvents && { hasEvents }),
     });
   }
 
   return days;
 }
 
-export default function Calendar({ events }: { events: Event[] | undefined }) {
-  // For now we stick to 2024, but this could be dynamic
-  // const currYear = new Date().getFullYear();
+function filterEventsByDate(
+  date: string,
+  events: Event[] | undefined
+): Event[] {
+  if (!events) return [];
 
+  const [nextYear, nextMonth, nextDay] = date
+    .split('-')
+    .map((num) => parseInt(num, 10));
+
+  return events?.filter((event) => {
+    const [eventYear, eventMonth, eventDay] = event.startDate
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .map((num) => parseInt(num, 10));
+    return (
+      eventDay === nextDay && eventMonth === nextMonth && eventYear === nextYear
+    );
+  });
+}
+
+export default function Calendar({ events }: { events: Event[] | undefined }) {
   // format as "YYYY-MM-DD"
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );
+  // our list of events filtered to the selectedDate
+  const [currentEvents, setCurrentEvents] = useState<Event[] | undefined>(
+    events
+  );
+
   // To get correct month name, split the date string and create a new Date object
   // to avoid timezone issues.
-  const [year, month, day] = selectedDate.split('-').map((num) => parseInt(num, 10));
-  const selectedMonthName = new Date(year, month, day).toLocaleString('default', {
-    month: 'long',
-  });
-  
-  const days = generateCalendarDays(selectedDate);
-  
-  function handleDayClick(date: string) {
+  const [year, month, day] = selectedDate
+    .split('-')
+    .map((num) => parseInt(num, 10));
+  const selectedMonthName = new Date(year, month - 1, day).toLocaleString(
+    'default',
+    {
+      month: 'long',
+    }
+  );
+
+  const days = generateCalendarDays(selectedDate, events);
+
+  // React.useEffect(() => {
+  //   setCurrentEvents(events?.filter((event) => {
+  //     const [eventYear, eventMonth, eventDay] = event.startDate.toISOString().split('T')[0].split('-').map((num) => parseInt(num, 10));
+  //     return day === eventDay && month === eventMonth && year === eventYear;
+  //   }));
+  //   console.log(currentEvents);
+  // }, [events, currentEvents, day, month, year]);
+
+  function handleDayClick(date: string, events: Event[] | undefined) {
     setSelectedDate(date);
+    setCurrentEvents(filterEventsByDate(date, events));
   }
 
   return (
@@ -169,12 +211,13 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
                     ? 'text-gray-400'
                     : '',
                   day.isToday && !day.isSelected ? 'text-indigo-600' : '',
+                  day.hasEvents ? 'underline underline-offset-2' : '',
                   dayIdx === 0 ? 'rounded-tl-lg' : '',
                   dayIdx === 6 ? 'rounded-tr-lg' : '',
                   dayIdx === days.length - 7 ? 'rounded-bl-lg' : '',
                   dayIdx === days.length - 1 ? 'rounded-br-lg' : ''
                 )}
-                onClick={() => handleDayClick(day.date)}
+                onClick={() => handleDayClick(day.date, events)}
               >
                 <time
                   dateTime={day.date}
@@ -189,6 +232,9 @@ export default function Calendar({ events }: { events: Event[] | undefined }) {
               </button>
             ))}
           </div>
+          <p className='text-left text-sm mt-2 italic text-slate-400'>
+            *Underlined dates have events
+          </p>
           <button
             type='button'
             className='mt-8 w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
