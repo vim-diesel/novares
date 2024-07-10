@@ -42,7 +42,6 @@ function classNames(...classes: string[]) {
 }
 
 function generateCalendarDays(
-  year: number,
   selectedDate: string
 ): Array<{
   date: string;
@@ -54,11 +53,10 @@ function generateCalendarDays(
 
   // To ensure the correct month is selected, regardless of time zone,
   // we have to split the selected date string and create a new date object.
-  // If we pass the Date constructor a string without a timezone, the first and last days of the month
-  // will be incorrect. This is because the date string is interpreted as UTC, but the date object
-  // is created in the local timezone. So midnight @ UTC is still the previous day in local time.
+  // If we pass the Date constructor a string without a timezone, 
+  // midnight @ UTC is still the previous day in local time.
   // so we can't use new Date('2024-07-01') directly.
-  
+
   const [yearStr, monthStr, dayStr] = selectedDate
     .split('-')
     .map((num) => parseInt(num, 10));
@@ -66,8 +64,8 @@ function generateCalendarDays(
 
   const month = new Date(date).getMonth(); // zero-indexed
 
-  const firstDayOfMonth = new Date(year, month, 1);
-  const lastDayOfMonth = new Date(year, month + 1, 0);
+  const firstDayOfMonth = new Date(yearStr, month, 1);
+  const lastDayOfMonth = new Date(yearStr, month + 1, 0);
   console.log('firstDayOfMonth: ', firstDayOfMonth);
   console.log('lastDayOfMonth: ', lastDayOfMonth);
 
@@ -105,24 +103,23 @@ function generateCalendarDays(
 
 export default function Calendar({ events }: { events: Event[] | undefined }) {
   // For now we stick to 2024, but this could be dynamic
-  const currYear = new Date().getFullYear();
+  // const currYear = new Date().getFullYear();
 
   // format as "YYYY-MM-DD"
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );
-  const [selectedYear, selectedMonth, selectedDay] = selectedDate.split('-');
-  const selectedMonthName = new Date(selectedDate).toLocaleString('default', {
+  const [selectedYear, selectedMonth, selectedDay] = selectedDate.split('-').map((num) => parseInt(num, 10));
+  const selectedMonthName = new Date(selectedYear,selectedMonth, selectedDay).toLocaleString('default', {
     month: 'long',
   });
 
   React.useEffect(() => {
-    // console.log('changed month: ', selectedMonth);
+    
   }, [selectedMonth]);
-  // console.log('selectedDate: ',selectedDate)
 
-  const days = generateCalendarDays(currYear, selectedDate);
-  // console.log(days);
+
+  const days = generateCalendarDays(selectedDate);
 
   function handleDayClick(date: string) {
     setSelectedDate(date);
