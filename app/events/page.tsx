@@ -5,7 +5,6 @@ import EventsTableSorted from './EventsTableSorted';
 import { getEventsCount, getEventsMany } from '@/actions/actions';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/db';
-import { parse } from 'path';
 
 export default async function Page({
   searchParams,

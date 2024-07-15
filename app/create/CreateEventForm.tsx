@@ -20,10 +20,9 @@ export default function CreateEventForm() {
     },
     onError({ error }) {
       if (error.validationErrors) {
-        toast.error('入力ミス 🤨 input missing');
+        toast.error('入力ミス 🤨 check all required fields');
       } else if (error.serverError) {
         toast.error('サーバーが燃えている 🔥 server on fire');
-        console.log(error);
       }
     },
   });
@@ -36,14 +35,16 @@ export default function CreateEventForm() {
 
         const res = await executeAsync({
           title: formData.get('title') as string,
-          startDate: startDate?.toISOString() as string,
+          startDate: '', //startDate?.toISOString() as string,
           endDate: endDate?.toISOString(),
           location: formData.get('location') as string | undefined,
           price: Number(formData.get('price')) as number | undefined,
-          status: formData.get('eventStatus') as "open" | "closed" | "waitlist" | undefined,
+          status: formData.get('eventStatus') as
+            | 'open'
+            | 'closed'
+            | 'waitlist'
+            | undefined,
         });
-
-        console.log('result', res);
       }}
     >
       <div className='space-y-12'>
@@ -210,7 +211,7 @@ export default function CreateEventForm() {
           {status === 'executing' ? 'Submitting...' : 'Submit'}
         </button>
       </div>
-      <p>Result: {JSON.stringify(result)}</p>
+      {/* <p>Result: {JSON.stringify(result)}</p> */}
     </form>
   );
 }
