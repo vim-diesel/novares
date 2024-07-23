@@ -12,7 +12,7 @@ datasource db {
 
 model Event {
   id          String    @id @default(cuid())
-  title        String
+  title       String
   description String?
   startDate   DateTime
   endDate     DateTime?

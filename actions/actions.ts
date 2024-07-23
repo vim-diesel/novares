@@ -10,7 +10,7 @@ const NewEventSchema = z.object({
   startDate: z.string().datetime(),
   endDate: z.string().datetime().optional(),
   location: z.string().optional(),
-  price: z.number().optional(),
+  price: z.number().positive().optional(),
   status: z.enum(['open', 'closed', 'waitlist']).optional(),
 });
 
@@ -21,7 +21,7 @@ export const createEvent = actionClient
       parsedInput: { title, startDate, location, price, endDate, status },
     }) => {
       // Just for testing the status hook/submission button
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const event = await prisma.event.create({
         data: {
@@ -43,11 +43,8 @@ export async function getEventsCount() {
 }
 
 export async function getEventsMany(page: number, orderBy: string, direction: string) {
-  // This makes any page or caloumn order selection freeze the app
-  // We are calling this function on every sort/page change...
-  // Find a way to cache it and sort/ paginate in the app?
-
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  // Test the loading of data
+  // await new Promise((resolve) => setTimeout(resolve, 1000))
 
   const res = await prisma.event.findMany({
     take: 10,

@@ -20,9 +20,11 @@ export default function CreateEventForm() {
     },
     onError({ error }) {
       if (error.validationErrors) {
-        toast.error('入力ミス 🤨 check all required fields');
+        toast.error('入力エラー 🤨 check all required fields');
       } else if (error.serverError) {
         toast.error('サーバーが燃えている 🔥 server on fire');
+      } else {
+        toast.error('不明なエラー 🤔 error');
       }
     },
   });
@@ -111,7 +113,6 @@ export default function CreateEventForm() {
                   className='block w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                   placeholder='0'
                   aria-describedby='price-currency'
-                  pattern='\d*'
                 />
                 <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
                   <span
