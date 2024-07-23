@@ -35,7 +35,7 @@ export default function CreateEventForm() {
 
         const res = await executeAsync({
           title: formData.get('title') as string,
-          startDate: '', //startDate?.toISOString() as string,
+          startDate: startDate?.toISOString() as string,
           endDate: endDate?.toISOString(),
           location: formData.get('location') as string | undefined,
           price: Number(formData.get('price')) as number | undefined,
