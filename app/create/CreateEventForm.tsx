@@ -14,34 +14,56 @@ const eventStatus = [
 export default function CreateEventForm() {
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
+  const [price, setPrice] = React.useState<number>(0);
   const titleLabelRef = React.useRef<HTMLLabelElement>(null);
   const startDateLabelRef = React.useRef<HTMLLabelElement>(null);
-  const startDateDivRef = React.useRef<HTMLDivElement>(null);
+  const priceLabelRef = React.useRef<HTMLLabelElement>(null);
+
+  // Pass this function to the DatePicker component so that the error highlight
+  // can be removed.
+  const resetLabel = () => {
+    startDateLabelRef.current?.classList.remove('text-red-500');
+  };
+
+  let toastid: string;
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    priceLabelRef.current?.classList.remove('text-red-500');
+
+    const currPrice = Number(e.target.value);
+    if (isNaN(currPrice)) {
+      toast.remove(toastid);
+      toastid = toast.error('Price must be a positive number');
+      setPrice((prev) => prev || 0);
+    } else if (currPrice > 2147483647) {
+      toast.remove(toastid);
+      toastid = toast.error('Jesuuuus thats expensive! 🤑');
+      setPrice((prev) => prev || 0);
+    } else {
+      setPrice(currPrice);
+    }
+  };
 
   const { executeAsync, result, status } = useAction(createEvent, {
     onSuccess() {
       toast.success('Event created!');
     },
     onError({ error }) {
-
-      // We would like to, on any input error, focus on the first input field that has an error
-      // and highlight the label in red. However, this only works for native form elements,
-      // the shadcn DatePicker component does not accept a ref, so all we can do is highlight 
-      // the label in red. We can't focus on the DatePicker component itself. We also cannot 
-      // remove the highlight once the error is fixed, as the DatePicker component does not
-      // accept an onChange event. 
-      // The onchange I might be able to add, but I couldn't for the life of me figure out
-      // the ref. I even tried the repo at hsuanyi-chou/shadcn-ui-expansions which does 
-      // accept refs but it still didn't work. 
-
+      // We use our own error handling of inputs, this creates extra work but allows
+      // a lot of flexibility in how we handle errors and display it to the user
+      // as opposed to letting the browser do it though the HTML form elements.
       if (error.validationErrors) {
         toast.error('入力エラー 🤨 check all required fields');
         if ('title' in error.validationErrors) {
           titleLabelRef.current?.focus();
           titleLabelRef.current?.classList.add('text-red-500');
         } else if ('startDate' in error.validationErrors) {
+          // Scroll to the start date div and highlight the label. Can't focus
+          // because I can't pass a ref to the DatePicker component. (?) 🤔
           startDateLabelRef.current?.scrollIntoView();
           startDateLabelRef.current?.classList.add('text-red-500');
+        } else if ('price' in error.validationErrors) {
+          priceLabelRef.current?.scrollIntoView();
+          priceLabelRef.current?.classList.add('text-red-500');
         }
       } else if (error.serverError) {
         toast.error('サーバーが燃えている 🔥 server on fire');
@@ -57,7 +79,7 @@ export default function CreateEventForm() {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
 
-        const res = await executeAsync({
+        await executeAsync({
           title: formData.get('title') as string,
           startDate: startDate?.toISOString() as string,
           endDate: endDate?.toISOString(),
@@ -92,7 +114,9 @@ export default function CreateEventForm() {
                     name='title'
                     id='title'
                     className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
-                    onChange={() => titleLabelRef.current?.classList.remove('text-red-500')}
+                    onChange={() =>
+                      titleLabelRef.current?.classList.remove('text-red-500')
+                    }
                   />
                 </div>
               </div>
@@ -123,6 +147,7 @@ export default function CreateEventForm() {
               <label
                 htmlFor='price'
                 className='block text-sm font-medium leading-6 text-gray-900'
+                ref={priceLabelRef}
               >
                 Price
               </label>
@@ -137,6 +162,8 @@ export default function CreateEventForm() {
                   className='block w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                   placeholder='0'
                   aria-describedby='price-currency'
+                  value={price}
+                  onChange={handlePriceChange}
                 />
                 <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
                   <span
@@ -166,17 +193,22 @@ export default function CreateEventForm() {
               </div>
             </div>
 
-            <div className='row-start-5' ref={startDateDivRef}>
+            <div className='row-start-5'>
               <label
                 className='block mb-2 text-sm font-medium leading-6 text-gray-900'
                 ref={startDateLabelRef}
               >
-                Start Date<span className='text-red-500'>*</span>
+                Start Date
+                <span className='text-red-500'>*</span>
               </label>
-              <DatePicker date={startDate} setDate={setStartDate} />
+              <DatePicker
+                date={startDate}
+                setDate={setStartDate}
+                resetLabel={resetLabel}
+              />
             </div>
 
-            <div className='row-start-6' >
+            <div className='row-start-6'>
               <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
                 End Date
               </label>
