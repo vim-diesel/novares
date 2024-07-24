@@ -14,13 +14,35 @@ const eventStatus = [
 export default function CreateEventForm() {
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
+  const titleLabelRef = React.useRef<HTMLLabelElement>(null);
+  const startDateLabelRef = React.useRef<HTMLLabelElement>(null);
+  const startDateDivRef = React.useRef<HTMLDivElement>(null);
+
   const { executeAsync, result, status } = useAction(createEvent, {
     onSuccess() {
       toast.success('Event created!');
     },
     onError({ error }) {
+
+      // We would like to, on any input error, focus on the first input field that has an error
+      // and highlight the label in red. However, this only works for native form elements,
+      // the shadcn DatePicker component does not accept a ref, so all we can do is highlight 
+      // the label in red. We can't focus on the DatePicker component itself. We also cannot 
+      // remove the highlight once the error is fixed, as the DatePicker component does not
+      // accept an onChange event. 
+      // The onchange I might be able to add, but I couldn't for the life of me figure out
+      // the ref. I even tried the repo at hsuanyi-chou/shadcn-ui-expansions which does 
+      // accept refs but it still didn't work. 
+
       if (error.validationErrors) {
         toast.error('入力エラー 🤨 check all required fields');
+        if ('title' in error.validationErrors) {
+          titleLabelRef.current?.focus();
+          titleLabelRef.current?.classList.add('text-red-500');
+        } else if ('startDate' in error.validationErrors) {
+          startDateLabelRef.current?.scrollIntoView();
+          startDateLabelRef.current?.classList.add('text-red-500');
+        }
       } else if (error.serverError) {
         toast.error('サーバーが燃えている 🔥 server on fire');
       } else {
@@ -59,6 +81,7 @@ export default function CreateEventForm() {
               <label
                 htmlFor='title'
                 className='block text-sm font-medium leading-6 text-gray-900'
+                ref={titleLabelRef}
               >
                 Event Name<span className='text-red-500'>*</span>
               </label>
@@ -69,6 +92,7 @@ export default function CreateEventForm() {
                     name='title'
                     id='title'
                     className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
+                    onChange={() => titleLabelRef.current?.classList.remove('text-red-500')}
                   />
                 </div>
               </div>
@@ -142,28 +166,21 @@ export default function CreateEventForm() {
               </div>
             </div>
 
-            <div className='row-start-5'>
-              <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
+            <div className='row-start-5' ref={startDateDivRef}>
+              <label
+                className='block mb-2 text-sm font-medium leading-6 text-gray-900'
+                ref={startDateLabelRef}
+              >
                 Start Date<span className='text-red-500'>*</span>
               </label>
               <DatePicker date={startDate} setDate={setStartDate} />
-              {/* <input
-                type='hidden'
-                name='startDate'
-                value={startDate ? startDate.toISOString() : ''}
-              /> */}
             </div>
 
-            <div className='row-start-6'>
+            <div className='row-start-6' >
               <label className='block mb-2 text-sm font-medium leading-6 text-gray-900'>
                 End Date
               </label>
               <DatePicker date={endDate} setDate={setEndDate} />
-              {/* <input
-                type='hidden'
-                name='endDate'
-                value={endDate?.toISOString()}
-              /> */}
             </div>
 
             <fieldset className='row-start-7'>

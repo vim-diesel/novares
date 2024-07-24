@@ -6,11 +6,11 @@ import { z } from 'zod';
 import { actionClient } from '@/lib/safe-action';
 
 const NewEventSchema = z.object({
-  title: z.string(),
+  title: z.string().min(1, 'Title is required'),
   startDate: z.string().datetime(),
   endDate: z.string().datetime().optional(),
   location: z.string().optional(),
-  price: z.number().positive().optional(),
+  price: z.number().nonnegative().optional(),
   status: z.enum(['open', 'closed', 'waitlist']).optional(),
 });
 
