@@ -57,12 +57,10 @@ export default function CreateEventForm() {
           titleLabelRef.current?.focus();
           titleLabelRef.current?.classList.add('text-red-500');
         } else if ('startDate' in error.validationErrors) {
-          // Scroll to the start date div and highlight the label. Can't focus
-          // because I can't pass a ref to the DatePicker component. (?) 🤔
           startDateLabelRef.current?.scrollIntoView();
           startDateLabelRef.current?.classList.add('text-red-500');
         } else if ('price' in error.validationErrors) {
-          priceLabelRef.current?.scrollIntoView();
+          priceLabelRef.current?.focus();
           priceLabelRef.current?.classList.add('text-red-500');
         }
       } else if (error.serverError) {
