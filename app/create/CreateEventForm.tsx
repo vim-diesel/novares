@@ -36,7 +36,7 @@ export default function CreateEventForm() {
       setPrice((prev) => prev || 0);
     } else if (currPrice > 2147483647) {
       toast.remove(toastid);
-      toastid = toast.error('Jesuuuus thats expensive! 🤑');
+      toastid = toast.error('Wowww thats expensive! 🤑');
       setPrice((prev) => prev || 0);
     } else {
       setPrice(currPrice);
