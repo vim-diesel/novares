@@ -1,4 +1,4 @@
-const events = [
+export const eventData = [
   {
     title: 'Summer Music Festival',
     description: 'Enjoy the best summer tunes',
@@ -318,4 +318,3 @@ const events = [
   },
 ];
 
-module.exports = events;
