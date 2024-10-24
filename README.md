@@ -6,6 +6,8 @@
 3. implement month change buttons on calendar
 ```
 
+This app shows off how to add reactivity to TailwindUI elements such as the Calendar, Pagination, Table, and Form elements.
+
 ## NovaRes
 
 Create, manage, and host workshops and events.
